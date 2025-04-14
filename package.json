@@ -1,7 +1,7 @@
 {
-    "name": "phaser3-ts-vite-template-v2",
-    "description": "Verison 2 of Stiggstoggs Phaser 3, Vite, TypeScript template",
-    "version": "1.0.2",
+    "name": "balance",
+    "description": "Balance, My Entry to Gamedev.js 2025",
+    "version": "0.0.1",
     "author": "Stiggstogg",
     "license": "MIT",
     "licenseUrl": "http://www.opensource.org/licenses/mit-license.php",

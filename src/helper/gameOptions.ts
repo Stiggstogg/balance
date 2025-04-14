@@ -18,7 +18,7 @@ class GameOptions {
         // ---------------------
 
         // title of the game
-        this.gameTitle = 'My Game';
+        this.gameTitle = 'Balance';
 
         // Width and height of the game (canvas)
         this.gameWidth = 800;
