@@ -2,7 +2,16 @@ import { Scene } from 'phaser';
 import gameOptions from "../helper/gameOptions";
 
 // images
-import spongeImg from '../assets/images/sponge.jpeg';
+import backgroundImg from '../assets/images/background.png';
+import cloud1Img from '../assets/images/Cloud1.png';
+import cloud2Img from '../assets/images/Cloud2.png';
+import frameBackImg from '../assets/images/frame-back.png';
+import frameOuterImg from '../assets/images/frame-outer.png';
+import watchImg from '../assets/images/watch.png';
+import buttonImg from '../assets/images/button.png';
+
+// fonts
+import LuckiestGuyFont from '../assets/fonts/LuckiestGuy-Regular.ttf';
 
 // audio
 
@@ -57,10 +66,19 @@ export default class LoadingScene extends Scene
     preload()
     {
         // load images
-        this.load.image('sponge', spongeImg);
+        this.load.image('background', backgroundImg);
+        this.load.image('cloud1', cloud1Img);
+        this.load.image('cloud2', cloud2Img);
+        this.load.image('frame-back', frameBackImg);
+        this.load.image('frame-outer', frameOuterImg);
+        this.load.image('watch', watchImg);
+        this.load.image('button', buttonImg);
 
         // load audio
         //this.load.audio('miss', 'assets/audio/Pew.mp3');
+
+        // fonts
+        this.load.font('Luckiest Guy', LuckiestGuyFont, 'truetype');
 
     }
 

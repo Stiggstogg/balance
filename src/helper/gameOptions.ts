@@ -9,7 +9,8 @@ class GameOptions {
     public readonly gameTitle: string;
     public readonly gameWidth: number;                                  // game width
     public readonly gameHeight: number;                                 // game height
-    public readonly textStyles: Types.GameObjects.Text.TextStyle[];
+    public readonly titleTextStyle: Types.GameObjects.Text.TextStyle;
+    public readonly buttonTextStyle: Types.GameObjects.Text.TextStyle;
 
     constructor() {
 
@@ -21,22 +22,30 @@ class GameOptions {
         this.gameTitle = 'Balance';
 
         // Width and height of the game (canvas)
-        this.gameWidth = 800;
-        this.gameHeight = 600;
+        this.gameWidth = 1024;
+        this.gameHeight = 488;
 
         // ---------------------
         // Text styles
         // ---------------------
 
-        this.textStyles = [];
+        this.titleTextStyle = {
+            fontFamily: 'Luckiest Guy',
+            fontSize: '70px',
+            color: '#FFFFFF',
+            stroke: '#000000',
+            strokeThickness: 10,
+            align: 'center'
+        };
 
-        // Text style 0: Title
-        this.textStyles.push({
-            fontFamily: 'Orbitron',
-            fontSize: '100px',
-            color: '#FFE500',
-            fontStyle: 'bold'
-        });
+        this.buttonTextStyle = {
+            fontFamily: 'Luckiest Guy',
+            fontSize: '40px',
+            color: '#FFFFFF',
+            stroke: '#000000',
+            strokeThickness: 4,
+            align: 'center'
+        };
 
     }
 
