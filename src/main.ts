@@ -9,7 +9,8 @@ import BootScene from './scenes/BootScene';
 import LoadingScene from './scenes/LoadingScene';
 import MenuScene from './scenes/MenuScene';
 import GameScene from './scenes/GameScene';
-import GameOverScene from './scenes/GameOverScene';
+import AccountantScene from './scenes/AccountantScene';
+import LawnScene from './scenes/LawnScene.ts';
 
 // other imports
 import gameOptions from './helper/gameOptions';
@@ -21,7 +22,6 @@ const config: Types.Core.GameConfig = {
     height: gameOptions.gameHeight,
     parent: 'game-container',
     backgroundColor: '#000000',
-    pixelArt: true,
     scale: {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH
@@ -31,7 +31,8 @@ const config: Types.Core.GameConfig = {
         LoadingScene,
         MenuScene,
         GameScene,
-        GameOverScene
+        AccountantScene,
+        LawnScene
     ]
 };
 
