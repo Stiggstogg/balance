@@ -17,10 +17,9 @@ export default class LawnScene extends BaseFrameScene
     create()
     {
 
-        // add basic elements
-        this.addElements();
+        super.create();
 
-        this.moveFrameIn();
+
 
 
     }

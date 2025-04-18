@@ -1,7 +1,8 @@
 // interfaces used in the code
 
 export enum ButtonId {
-    PLAY = 'playBtn'
+    PLAY = 'playBtn',
+    START = 'startBtn'
 }
 
 export enum Side {

@@ -7,6 +7,7 @@ import './style.css'
 // scene imports
 import BootScene from './scenes/BootScene';
 import LoadingScene from './scenes/LoadingScene';
+import BackgroundScene from './scenes/BackgroundScene';
 import MenuScene from './scenes/MenuScene';
 import GameScene from './scenes/GameScene';
 import AccountantScene from './scenes/AccountantScene';
@@ -29,10 +30,11 @@ const config: Types.Core.GameConfig = {
     scene: [
         BootScene,
         LoadingScene,
+        BackgroundScene,
         MenuScene,
         GameScene,
-        AccountantScene,
-        LawnScene
+        LawnScene,
+        AccountantScene
     ]
 };
 

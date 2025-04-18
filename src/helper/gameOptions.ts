@@ -10,10 +10,12 @@ class GameOptions {
     public readonly gameWidth: number;                                  // game width
     public readonly gameHeight: number;                                 // game height
     public readonly titleTextStyle: Types.GameObjects.Text.TextStyle;
+    public readonly subTitleTextStyle: Types.GameObjects.Text.TextStyle;
+    public readonly normalTextStyle: Types.GameObjects.Text.TextStyle;
     public readonly buttonTextStyle: Types.GameObjects.Text.TextStyle;
-    public readonly cloud1Pos: { x: number; y: number };                // cloud 1 position
-    public readonly cloud2Pos: { x: number; y: number };                // cloud 2 position
-    public readonly framePos: number;                                  // frame position (distance from the edges)
+    public readonly cloudSpeedDifference: number;                      // relative difference in speed between the two clouds
+    public readonly cloudSpeed: number;                                // speed of the clouds
+
     public readonly watchPos: { x: number; y: number };                // watch position
 
     constructor() {
@@ -30,20 +32,25 @@ class GameOptions {
         this.gameHeight = 488;
 
         // ----------------------------
-        // Positions of game objects
+        // Scene options: Background
         // ----------------------------
 
         // cloud position
-        this.cloud1Pos = { x: 46, y: 15 };
-        this.cloud2Pos = { x: 644, y: 73 };
+        this.cloudSpeed = 0.01;                   // speed of the clouds in game width per second
+        this.cloudSpeedDifference = 0.05;            // relative difference in speed between the two clouds
 
-        // frame positions (distance from the edges)
-        this.framePos = 4;
+        // ----------------------------
+        // Scene options: Base Frame
+        // ----------------------------
+
+
+
+        // ----------------------------
+        // Scene options: Game
+        // ----------------------------
 
         // watch position
-        this.watchPos = { x: 511, y: 163 };
-
-
+        this.watchPos = { x: 512, y: 163 };
 
         // ---------------------
         // Text styles
@@ -66,6 +73,22 @@ class GameOptions {
             strokeThickness: 4,
             align: 'center'
         };
+
+        this.subTitleTextStyle = {
+            fontFamily: 'Nunito',
+            fontSize: '48px',
+            color: '#FFFFFF',
+            stroke: '#000000',
+            strokeThickness: 4,
+            align: 'center'
+        }
+
+        this.normalTextStyle = {
+            fontFamily: 'Nunito',
+            fontSize: '24px',
+            color: '#000000',
+            align: 'center'
+        }
 
     }
 

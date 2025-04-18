@@ -17,10 +17,10 @@ export default class AccountantScene extends BaseFrameScene
     create()
     {
 
-        // add basic elements
-        this.addElements();
+        super.create();
 
-        this.moveFrameIn();
+        // add basic elements
+
 
     }
 

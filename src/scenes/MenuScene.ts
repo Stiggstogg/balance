@@ -1,10 +1,9 @@
-import {GameObjects} from 'phaser';
+import {GameObjects, Scene} from 'phaser';
 import gameOptions from "../helper/gameOptions.ts";
 import Button from "../sprites/Button.ts";
 import {ButtonId} from "../helper/enums.ts";
-import BaseScene from "./BaseScene.ts";
 
-export default class MenuScene extends BaseScene
+export default class MenuScene extends Scene
 {
     private title: GameObjects.Text;
     private button: Button;
@@ -16,9 +15,6 @@ export default class MenuScene extends BaseScene
 
     create()
     {
-
-        // add background
-        super.addBackground();
 
         // Title
         this.title = this.add.text(gameOptions.gameWidth / 2, gameOptions.gameHeight * 0.2, gameOptions.gameTitle, gameOptions.titleTextStyle).setOrigin(0.5, 0);

@@ -12,6 +12,7 @@ import buttonImg from '../assets/images/button.png';
 
 // fonts
 import LuckiestGuyFont from '../assets/fonts/LuckiestGuy-Regular.ttf';
+import NunitoFont from '../assets/fonts/Nunito-VariableFont_wght.ttf';
 
 // audio
 
@@ -79,6 +80,7 @@ export default class LoadingScene extends Scene
 
         // fonts
         this.load.font('Luckiest Guy', LuckiestGuyFont, 'truetype');
+        this.load.font('Nunito', NunitoFont, 'truetype');
 
     }
 
@@ -88,6 +90,7 @@ export default class LoadingScene extends Scene
         //  For example, you can define global animations here, so we can use them in other scenes.
 
         //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
-        this.scene.start('Menu');
+        this.scene.start('Background');
+        this.scene.launch('Game', {workSceneKey: 'Accountant', lifeSceneKey: 'Lawn'});
     }
 }
