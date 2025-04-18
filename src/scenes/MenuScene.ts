@@ -27,7 +27,8 @@ export default class MenuScene extends Scene
 
         // Change to game scene when button is clicked
         this.events.on('click' + ButtonId.PLAY, () => {
-            this.scene.start('Game');
+            this.scene.launch('Game', {workSceneKey: 'Accountant', lifeSceneKey: 'Lawn'});
+            this.scene.stop();
         });
 
     }

@@ -9,14 +9,13 @@ class GameOptions {
     public readonly gameTitle: string;
     public readonly gameWidth: number;                                  // game width
     public readonly gameHeight: number;                                 // game height
+    public readonly timeLimit: number;                                 // time limit for each mini game
     public readonly titleTextStyle: Types.GameObjects.Text.TextStyle;
     public readonly subTitleTextStyle: Types.GameObjects.Text.TextStyle;
     public readonly normalTextStyle: Types.GameObjects.Text.TextStyle;
     public readonly buttonTextStyle: Types.GameObjects.Text.TextStyle;
     public readonly cloudSpeedDifference: number;                      // relative difference in speed between the two clouds
     public readonly cloudSpeed: number;                                // speed of the clouds
-
-    public readonly watchPos: { x: number; y: number };                // watch position
 
     constructor() {
 
@@ -30,6 +29,9 @@ class GameOptions {
         // Width and height of the game (canvas)
         this.gameWidth = 1024;
         this.gameHeight = 488;
+
+        // time limit for each mini game
+        this.timeLimit = 3; // seconds
 
         // ----------------------------
         // Scene options: Background
@@ -48,9 +50,6 @@ class GameOptions {
         // ----------------------------
         // Scene options: Game
         // ----------------------------
-
-        // watch position
-        this.watchPos = { x: 512, y: 163 };
 
         // ---------------------
         // Text styles

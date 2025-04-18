@@ -11,7 +11,7 @@ export default class AccountantScene extends BaseFrameScene
     constructor(config?: string | Types.Scenes.SettingsConfig)
     {
         super(Side.WORK, 'Accountant', 'Calculate the numbers', 'Accountant');
-
+        //super(Side.WORK, 'LEFT', 'Do something', 'Accountant');                 // TODO: Remove at the end, just for video recording before full game reveal
     }
 
     create()

@@ -9,3 +9,9 @@ export enum Side {
     WORK = 'work',
     LIFE = 'life'
 }
+
+export enum GameState {
+    BEFORE = 0,
+    PLAYING = 1,
+    AFTER = 2
+}

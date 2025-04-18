@@ -1,12 +1,13 @@
-import {GameObjects, Scene, Types, Tweens} from 'phaser';
+import {GameObjects, Scene, Tweens, Types} from 'phaser';
 import gameOptions from '../helper/gameOptions.ts';
-import {ButtonId, Side} from '../helper/enums.ts';
+import {ButtonId, GameState, Side} from '../helper/enums.ts';
 import Button from '../sprites/Button.ts';
 
 // Basic frame scene class with the frame and common elements
 export default class BaseFrameScene extends Scene
 {
 
+    protected gameState: GameState;
     private side: Side;
     private sideFactor: number;        // side factor (work: 1, life: -1)
     private sideTitle: GameObjects.Text;
@@ -45,6 +46,9 @@ export default class BaseFrameScene extends Scene
     // Add basic elements
     create(): void {
 
+        // set game state
+        this.gameState = GameState.BEFORE;
+
         // positions
         const sideTitlePosY = gameOptions.gameHeight * 0.15;
         const titlePosY = gameOptions.gameHeight * 0.3;
@@ -56,6 +60,7 @@ export default class BaseFrameScene extends Scene
 
         // titles and descriptions
         this.sideTitle = this.add.text(0, sideTitlePosY, 'Work', gameOptions.titleTextStyle).setOrigin(0.5).setDepth(1.5);
+        //this.sideTitle.setText('Title Left');       // TODO: Remove at the end, just for video recording before full game reveal
         this.title = this.add.text(0, titlePosY, this.titleString, gameOptions.subTitleTextStyle).setOrigin(0.5).setDepth(1.5);
         this.description = this.add.text(0, descriptionPosY, this.descriptionString, gameOptions.normalTextStyle).setOrigin(0.5).setDepth(1.5);
 
@@ -86,6 +91,7 @@ export default class BaseFrameScene extends Scene
 
             // titles and descriptions: Change text
             this.sideTitle.setText('Life');
+            // this.sideTitle.setText('Title Right');       // TODO: Remove at the end, just for video recording before full game reveal
         }
 
         // set start positions
@@ -118,8 +124,20 @@ export default class BaseFrameScene extends Scene
 
         });
 
+        // start the countdown as soon as the texts are hidden
         this.tweenTextsOut.on('complete', () => {
             this.startCountdown();
+        });
+
+        // change game state when the game starts
+        this.events.on('startGame', () => {
+            this.gameState = GameState.PLAYING;
+        });
+
+        // change the game state when the game stops and move out the frame
+        this.events.on('stopGame', () => {
+            this.gameState = GameState.AFTER;
+            this.tweenFrameOut.play();
         });
 
     }
@@ -150,7 +168,7 @@ export default class BaseFrameScene extends Scene
         // button in and out (only for
         if (this.side === Side.WORK) {
             this.tweens.add({
-                targets: [this.startButton],
+                targets: this.startButton,
                 duration: frameTime / 2,
                 delay: frameTime / 2,
                 y: this.buttonPos.y,
@@ -227,6 +245,7 @@ export default class BaseFrameScene extends Scene
 
                     // destroy the countdown
                     this.countdown.destroy();
+                    this.events.emit('startGame');
 
                 }
 

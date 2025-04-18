@@ -12,6 +12,7 @@ import MenuScene from './scenes/MenuScene';
 import GameScene from './scenes/GameScene';
 import AccountantScene from './scenes/AccountantScene';
 import LawnScene from './scenes/LawnScene.ts';
+import PointsScene from './scenes/PointsScene.ts';
 
 // other imports
 import gameOptions from './helper/gameOptions';
@@ -34,7 +35,8 @@ const config: Types.Core.GameConfig = {
         MenuScene,
         GameScene,
         LawnScene,
-        AccountantScene
+        AccountantScene,
+        PointsScene
     ]
 };
 
