@@ -10,17 +10,25 @@ class GameOptions {
     public readonly gameWidth: number;                                  // game width
     public readonly gameHeight: number;                                 // game height
     public readonly timeLimit: number;                                 // time limit for each mini game
+    public readonly frameTweenLength: number;                         // tween length for the frame to appear and disappear
+    public readonly cloudSpeedDifference: number;                      // relative difference in speed between the two clouds
+    public readonly cloudSpeed: number;                                // speed of the clouds
+    public readonly accountantRange: { min: number; max: number };    // value range for the numbers to be added
+    public readonly accountantDeviation: { min: number; max: number }; // value range for the deviation of wrong results
+    public readonly accountantTenthProb: number;                       // probability of getting a wrong result with is +/- 10 so that the user can not only check the last number
+    public readonly accountantTwenthyProb: number;                     // probability of getting a wrong result with is +/- 20 so that the user can not only check the last number
+    public readonly accountantNumberSwitchProb: number;                // probability of getting a wrong result where the last two numbers are inverted
     public readonly titleTextStyle: Types.GameObjects.Text.TextStyle;
     public readonly subTitleTextStyle: Types.GameObjects.Text.TextStyle;
     public readonly normalTextStyle: Types.GameObjects.Text.TextStyle;
     public readonly buttonTextStyle: Types.GameObjects.Text.TextStyle;
-    public readonly cloudSpeedDifference: number;                      // relative difference in speed between the two clouds
-    public readonly cloudSpeed: number;                                // speed of the clouds
+    public readonly accountantTitleTextStyle: Types.GameObjects.Text.TextStyle;
+    public readonly accountantTextStyle: Types.GameObjects.Text.TextStyle;
 
     constructor() {
 
         // ---------------------
-        // Game and world area
+        // General options
         // ---------------------
 
         // title of the game
@@ -31,7 +39,10 @@ class GameOptions {
         this.gameHeight = 488;
 
         // time limit for each mini game
-        this.timeLimit = 3; // seconds
+        this.timeLimit = 30; // seconds
+
+        // tween lengths
+        this.frameTweenLength = 1000; // milliseconds
 
         // ----------------------------
         // Scene options: Background
@@ -42,9 +53,18 @@ class GameOptions {
         this.cloudSpeedDifference = 0.05;            // relative difference in speed between the two clouds
 
         // ----------------------------
-        // Scene options: Base Frame
+        // Game options: Accountant
         // ----------------------------
 
+        this.accountantRange = {min: 100, max: 499};    // value range for the numbers to be added
+        this.accountantDeviation = {min: 1, max: 30}; // value range for the deviation of wrong results
+        this.accountantTenthProb = 0.40;                // probability of getting a wrong result with is +/- 10 so that the user can not only check the last number
+        this.accountantTwenthyProb = 0.30;              // probability of getting a wrong result with is +/- 20 so that the user can not only check the last number
+        this.accountantNumberSwitchProb = 0.30;         // probability of getting a wrong result where the last two numbers are inverted
+
+        // ----------------------------
+        // Scene options: Base Frame
+        // ----------------------------
 
 
         // ----------------------------
@@ -87,6 +107,18 @@ class GameOptions {
             fontSize: '24px',
             color: '#000000',
             align: 'center'
+        }
+
+        this.accountantTitleTextStyle = {
+            fontFamily: 'SpecialElite',
+            fontSize: '28px',
+            color: '#000000'
+        }
+
+        this.accountantTextStyle = {
+            fontFamily: 'SpecialElite',
+            fontSize: '24px',
+            color: '#000000'
         }
 
     }

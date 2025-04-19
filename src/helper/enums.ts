@@ -2,7 +2,8 @@
 
 export enum ButtonId {
     PLAY = 'playBtn',
-    START = 'startBtn'
+    START = 'startBtn',
+    ACCOUNTANT = 'accountantBtn',
 }
 
 export enum Side {

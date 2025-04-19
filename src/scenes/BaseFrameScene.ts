@@ -1,7 +1,7 @@
 import {GameObjects, Scene, Tweens, Types} from 'phaser';
 import gameOptions from '../helper/gameOptions.ts';
 import {ButtonId, GameState, Side} from '../helper/enums.ts';
-import Button from '../sprites/Button.ts';
+import UIButton from '../sprites/UIButton.ts';
 
 // Basic frame scene class with the frame and common elements
 export default class BaseFrameScene extends Scene
@@ -19,14 +19,16 @@ export default class BaseFrameScene extends Scene
     private framePos: number;                                  // frame position (distance from the edges)
     private buttonPos: { x: number; y: number };                // button position
     private frameBack: GameObjects.Image;
-    private frameOuter: GameObjects.Image;
+    public frameOuter: GameObjects.Image;
+    private frameMask: GameObjects.Image;
     private xOut: number;           // x position of the frame when it is outside (invisible)
     private xIn: number;            // x position of the frame when it is inside (visible)
-    private startButton: Button;
+    private startButton: UIButton;
     private tweenFrameOut: Tweens.Tween;
     private tweenButtonOut: Tweens.Tween;
     private tweenTextsOut: Tweens.Tween;
     private tweenCountdown: Tweens.Tween;
+    protected points: number = 0;           // points for the current scene
 
     constructor(side: Side, titleString: string, descriptionString: string, config?: string | Types.Scenes.SettingsConfig)
     {
@@ -54,9 +56,10 @@ export default class BaseFrameScene extends Scene
         const titlePosY = gameOptions.gameHeight * 0.3;
         const descriptionPosY = gameOptions.gameHeight * 0.50;
 
-        // create frame (from background and frame)
+        // create frame (from background and frame and mask)
         this.frameBack = this.add.image(0, this.framePos,'frame-back').setDepth(0.5);
         this.frameOuter = this.add.image(0, this.framePos,'frame-outer').setDepth(2);
+        this.frameMask = this.add.image(0, this.framePos,'frame-mask').setDepth(1.4).setAlpha(0.95);
 
         // titles and descriptions
         this.sideTitle = this.add.text(0, sideTitlePosY, 'Work', gameOptions.titleTextStyle).setOrigin(0.5).setDepth(1.5);
@@ -74,10 +77,11 @@ export default class BaseFrameScene extends Scene
             // frame origin
             this.frameBack.setOrigin(0);
             this.frameOuter.setOrigin(0);
+            this.frameMask.setOrigin(0);
 
             // start button
-            this.startButton = this.add.existing(new Button(this, this.buttonPos.x, 0, 'Start', ButtonId.START));
-            this.startButton.setY(gameOptions.gameHeight + this.startButton.height/2).setDepth(3);
+            this.startButton = this.add.existing(new UIButton(this, this.buttonPos.x, 0, 'Start', ButtonId.START));
+            this.startButton.setY(gameOptions.gameHeight + this.startButton.height/2).setDepth(3).deactivate();
 
         } else {
 
@@ -88,29 +92,39 @@ export default class BaseFrameScene extends Scene
             // frame origin and flip
             this.frameBack.setOrigin(1, 0).setFlipX(true);
             this.frameOuter.setOrigin(1, 0).setFlipX(true);
+            this.frameMask.setOrigin(1, 0).setFlipX(true);
 
             // titles and descriptions: Change text
             this.sideTitle.setText('Life');
             // this.sideTitle.setText('Title Right');       // TODO: Remove at the end, just for video recording before full game reveal
         }
 
+        // TODO: Remove this, at the end, as it is only needed to setup the assets in the scene during development
+        // this.sideTitle.setVisible(false);
+        // this.title.setVisible(false);
+        // this.description.setVisible(false);
+
         // set start positions
         this.frameBack.setX(this.xOut);
         this.frameOuter.setX(this.xOut);
+        this.frameMask.setX(this.xOut);
         this.sideTitle.setX(this.xOut + this.sideFactor * this.frameBack.width / 2);
         this.title.setX(this.sideTitle.x);
         this.description.setX(this.sideTitle.x);
 
         // countdown number
-        this.countdown = this.add.text(this.xIn + this.sideFactor * this.frameBack.width / 2, gameOptions.gameHeight / 2, '3', gameOptions.titleTextStyle).setOrigin(0.5).setDepth(1.5).setScale(0);
+        this.countdown = this.add.text(this.xIn + this.sideFactor * this.frameBack.width / 2, gameOptions.gameHeight / 2, '1', gameOptions.titleTextStyle).setOrigin(0.5).setDepth(1.5).setScale(0);    // TODO: Change back to 3, this is only for faster testing
 
         // add tweens (and play the first one)
         this.addTweens();
 
         // add event listeners
-        this.events.on('click' + ButtonId.START, () => {
+        this.events.once('click' + ButtonId.START, () => {
 
             if (this.side === Side.WORK) {
+
+                // deactivate button
+                this.startButton.deactivate();
 
                 // remove the button
                 this.tweenButtonOut.play();
@@ -125,18 +139,19 @@ export default class BaseFrameScene extends Scene
         });
 
         // start the countdown as soon as the texts are hidden
-        this.tweenTextsOut.on('complete', () => {
+        this.tweenTextsOut.once('complete', () => {
             this.startCountdown();
         });
 
         // change game state when the game starts
-        this.events.on('startGame', () => {
+        this.events.once('startGame', () => {
             this.gameState = GameState.PLAYING;
         });
 
         // change the game state when the game stops and move out the frame
-        this.events.on('stopGame', () => {
+        this.events.once('stopGame', () => {
             this.gameState = GameState.AFTER;
+            this.frameMask.setVisible(true);
             this.tweenFrameOut.play();
         });
 
@@ -145,12 +160,10 @@ export default class BaseFrameScene extends Scene
     // add tweens
     private addTweens(): void {
 
-        const frameTime = 1000;
-
         // frame in
         this.tweens.add({
-            targets: [this.frameBack, this.frameOuter],
-            duration: frameTime,
+            targets: [this.frameBack, this.frameOuter, this.frameMask],
+            duration: gameOptions.frameTweenLength,
             x: this.xIn,
             ease: 'Power2',
             paused: false               // will directly play the tween
@@ -159,27 +172,32 @@ export default class BaseFrameScene extends Scene
         // titles and description in
         this.tweens.add({
             targets: [this.sideTitle, this.title, this.description],
-            duration: frameTime,
+            duration: gameOptions.frameTweenLength,
             x: this.xIn + this.sideFactor * this.frameBack.width / 2,
             ease: 'Power2',
             paused: false               // will directly play the tween
         });
 
-        // button in and out (only for
+        // button in and out (only for work scene)
         if (this.side === Side.WORK) {
+
+            // button in
             this.tweens.add({
                 targets: this.startButton,
-                duration: frameTime / 2,
-                delay: frameTime / 2,
+                duration: gameOptions.frameTweenLength / 2,
+                delay: gameOptions.frameTweenLength / 2,
                 y: this.buttonPos.y,
                 ease: 'Cubic.Out',
-                paused: false
+                paused: false,
+                onComplete: () => {
+                    this.startButton.activate();
+                }
             });
 
             // button out
             this.tweenButtonOut = this.tweens.add({
                 targets: [this.startButton],
-                duration: frameTime / 2,
+                duration: gameOptions.frameTweenLength / 2,
                 delay: 0,
                 y: gameOptions.gameHeight + this.startButton.height/2,
                 ease: 'Cubic.In',
@@ -193,7 +211,7 @@ export default class BaseFrameScene extends Scene
         // titles and description out
         this.tweenTextsOut = this.tweens.add({
             targets: [this.sideTitle, this.title, this.description],
-            duration: frameTime / 4,
+            duration: gameOptions.frameTweenLength / 4,
             scale: 0,
             ease: 'Cubic.Out',
             paused: true,
@@ -205,8 +223,8 @@ export default class BaseFrameScene extends Scene
         });
 
         this.tweenFrameOut = this.tweens.add({
-            targets: [this.frameBack, this.frameOuter],
-            duration: frameTime,
+            targets: [this.frameBack, this.frameOuter, this.frameMask],
+            duration: gameOptions.frameTweenLength,
             x: this.xOut,
             ease: 'Cubic.In',
             paused: true
@@ -245,6 +263,7 @@ export default class BaseFrameScene extends Scene
 
                     // destroy the countdown
                     this.countdown.destroy();
+                    this.frameMask.setVisible(false);
                     this.events.emit('startGame');
 
                 }

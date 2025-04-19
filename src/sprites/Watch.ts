@@ -3,7 +3,7 @@ import {GameObjects, Math} from 'phaser';
 export default class Watch extends GameObjects.Container {
 
     private watch: GameObjects.Image;
-    private point: GameObjects.Graphics;
+    private zifferblatt: GameObjects.Image
     private slice: GameObjects.Graphics;
     public watchHeight: number;
     private timeLimit: number;
@@ -18,17 +18,14 @@ export default class Watch extends GameObjects.Container {
 
         // create objects and add to container
         this.watch = new GameObjects.Image(scene, 0, 0, 'watch');
-
-        this.point = new GameObjects.Graphics(scene);
-        this.point.fillStyle(0x000000);
-        this.point.fillCircle(0, 0, 3);
+        this.zifferblatt = new GameObjects.Image(scene, 0, 0, 'zifferblatt');
 
         this.slice = new GameObjects.Graphics(scene);
         this.slice.slice(0, 0, 70, Math.DegToRad(269.9), Math.DegToRad(270), true);
         this.slice.fillStyle(0xdf7126);
         this.slice.fillPath();
 
-        this.add([this.watch, this.slice, this.point]);
+        this.add([this.watch, this.slice, this.zifferblatt]);
 
         // set the watch height
         this.watchHeight = this.watch.height;

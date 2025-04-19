@@ -35,32 +35,32 @@ export default class GameScene extends Scene
 
         this.tweens.add({
             targets: this.watch,
-            duration: 750,
+            duration: gameOptions.frameTweenLength * 0.75,
             y: gameOptions.gameHeight / 2,
             ease: 'Cubic.Out',
             paused: false
         });
 
         // forward the button click event from the work scene to the life scene
-        this.events.on('click' + ButtonId.START, () => {
+        this.events.once('click' + ButtonId.START, () => {
             this.scene.get(this.gameSceneData.lifeSceneKey).events.emit('click' + ButtonId.START);
         });
 
         // start the timer when the coutdown is over (game starts)
-        this.scene.get(this.gameSceneData.workSceneKey).events.on('startGame', () => {
+        this.scene.get(this.gameSceneData.workSceneKey).events.once('startGame', () => {
             this.watch.startTimer();
         });
 
         // forward the stop game event from the watch to the work and life scene, move the watch out of the frame
-        this.events.on('stopGame', () => {
+        this.events.once('stopGame', () => {
             this.scene.get(this.gameSceneData.lifeSceneKey).events.emit('stopGame');
             this.scene.get(this.gameSceneData.workSceneKey).events.emit('stopGame');
 
 
             this.tweens.add({
                 targets: this.watch,
-                delay: 250,
-                duration: 750,
+                delay: gameOptions.frameTweenLength * 0.25,
+                duration: gameOptions.frameTweenLength * 0.75,
                 y: gameOptions.gameHeight + this.watch.watchHeight / 2,
                 ease: 'Cubic.In',
                 paused: false,

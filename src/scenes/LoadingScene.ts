@@ -7,12 +7,19 @@ import cloud1Img from '../assets/images/Cloud1.png';
 import cloud2Img from '../assets/images/Cloud2.png';
 import frameBackImg from '../assets/images/frame-back.png';
 import frameOuterImg from '../assets/images/frame-outer.png';
+import frameMaskImg from '../assets/images/frame-mask.png';
 import watchImg from '../assets/images/watch.png';
 import buttonImg from '../assets/images/button.png';
+import zifferblattImg from '../assets/images/zifferblatt.png';
+import accountantBalancesheetImg from '../assets/images/accountant-balancesheet.png';
+import accountantPenImg from '../assets/images/accountant-pen.png';
+import accountantButtonImg from '../assets/images/accountant-button.png';
+import accountantValidationImg from '../assets/images/accountant-validation.png';
 
 // fonts
 import LuckiestGuyFont from '../assets/fonts/LuckiestGuy-Regular.ttf';
 import NunitoFont from '../assets/fonts/Nunito-VariableFont_wght.ttf';
+import SpecialEliteFont from '../assets/fonts/SpecialElite-Regular.ttf';
 
 // audio
 
@@ -72,8 +79,16 @@ export default class LoadingScene extends Scene
         this.load.image('cloud2', cloud2Img);
         this.load.image('frame-back', frameBackImg);
         this.load.image('frame-outer', frameOuterImg);
+        this.load.image('frame-mask', frameMaskImg);
         this.load.image('watch', watchImg);
+        this.load.image('zifferblatt', zifferblattImg);
         this.load.image('button', buttonImg);
+        this.load.image('accountant-balancesheet', accountantBalancesheetImg);
+        this.load.image('accountant-pen', accountantPenImg);
+        this.load.image('accountant-button', accountantButtonImg);
+
+        // load spritesheets
+        this.load.spritesheet('accountant-validation', accountantValidationImg, {frameWidth: 32, frameHeight: 32, margin: 1, spacing: 1});
 
         // load audio
         //this.load.audio('miss', 'assets/audio/Pew.mp3');
@@ -81,6 +96,7 @@ export default class LoadingScene extends Scene
         // fonts
         this.load.font('Luckiest Guy', LuckiestGuyFont, 'truetype');
         this.load.font('Nunito', NunitoFont, 'truetype');
+        this.load.font('SpecialElite', SpecialEliteFont, 'truetype');
 
     }
 
@@ -91,7 +107,7 @@ export default class LoadingScene extends Scene
 
         //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
         this.scene.start('Background');
-        this.scene.launch('Menu');
-        // this.scene.launch('Game', {workSceneKey: 'Accountant', lifeSceneKey: 'Lawn'}); // TODO: Just for testing to skip the menu
+        //this.scene.launch('Menu');
+        this.scene.launch('Game', {workSceneKey: 'Accountant', lifeSceneKey: 'Lawn'}); // TODO: Just for testing to skip the menu
     }
 }
