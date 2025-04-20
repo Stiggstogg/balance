@@ -15,6 +15,7 @@ import accountantBalancesheetImg from '../assets/images/accountant-balancesheet.
 import accountantPenImg from '../assets/images/accountant-pen.png';
 import accountantButtonImg from '../assets/images/accountant-button.png';
 import accountantValidationImg from '../assets/images/accountant-validation.png';
+import lawnMowerImg from '../assets/images/lawn-mower.png';
 
 // fonts
 import LuckiestGuyFont from '../assets/fonts/LuckiestGuy-Regular.ttf';
@@ -87,8 +88,10 @@ export default class LoadingScene extends Scene
         this.load.image('accountant-pen', accountantPenImg);
         this.load.image('accountant-button', accountantButtonImg);
 
+
         // load spritesheets
         this.load.spritesheet('accountant-validation', accountantValidationImg, {frameWidth: 32, frameHeight: 32, margin: 1, spacing: 1});
+        this.load.spritesheet('lawn-mower', lawnMowerImg, {frameWidth: 40, frameHeight: 20, margin: 1, spacing: 1});
 
         // load audio
         //this.load.audio('miss', 'assets/audio/Pew.mp3');
@@ -104,10 +107,24 @@ export default class LoadingScene extends Scene
     {
         //  When all the assets have loaded, it's often worth creating global objects here that the rest of the game can use.
         //  For example, you can define global animations here, so we can use them in other scenes.
+        createAnimations();
+
 
         //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
-        this.scene.start('Background');
+        //this.scene.start('Background');
         //this.scene.launch('Menu');
-        this.scene.launch('Game', {workSceneKey: 'Accountant', lifeSceneKey: 'Lawn'}); // TODO: Just for testing to skip the menu
+        //this.scene.launch('Game', {workSceneKey: 'Accountant', lifeSceneKey: 'Lawn'}); // TODO: Just for testing to skip the menu
+        this.scene.start('Test'); // TODO: Just for testing to skip the menu
+    }
+
+    createAnimations() {
+
+        this.anims.create({
+            key: 'mower-walk',
+            frames: this.anims.generateFrameNames('lawn-mower', {frames: [0, 1]}),
+            frameRate: 10,
+            repeat: -1
+        });
+
     }
 }

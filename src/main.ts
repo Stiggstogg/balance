@@ -13,6 +13,7 @@ import GameScene from './scenes/GameScene';
 import AccountantScene from './scenes/AccountantScene';
 import LawnScene from './scenes/LawnScene.ts';
 import PointsScene from './scenes/PointsScene.ts';
+import TestScene from './scenes/TestScene.ts';
 
 // other imports
 import gameOptions from './helper/gameOptions';
@@ -29,6 +30,12 @@ const config: Types.Core.GameConfig = {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH
     },
+    physics: {
+        default: 'arcade',
+        arcade: {
+            debug: false
+        }
+    },
     scene: [
         BootScene,
         LoadingScene,
@@ -37,7 +44,8 @@ const config: Types.Core.GameConfig = {
         GameScene,
         LawnScene,
         AccountantScene,
-        PointsScene
+        PointsScene,
+        TestScene
     ]
 };
 
