@@ -8,7 +8,7 @@ import Color = Phaser.Display.Color;
 export default class TestScene extends Scene
 {
 
-    private lawnTexture: GameObjects.RenderTexture;
+    private lawn: GameObjects.RenderTexture;
     private mower: Mower;
     private mowerLine: GameObjects.Line;
     private lineStart: {x: number, y: number};
@@ -22,53 +22,34 @@ export default class TestScene extends Scene
     {
 
         // create a render texture
-        this.lawnTexture = this.add.renderTexture(0, 0, gameOptions.gameWidth, gameOptions.gameHeight).setOrigin(0);
-        this.lawnTexture.fill(0x8f974a);
+        this.lawn = this.add.renderTexture(987, 37, 440, 317).setOrigin(1,0).setDepth(1);
+        this.lawn.fill(0x8f974a);
+        //this.lawn.draw('lawn-lawn', 0, 0);
 
         // create a graphics object
-        const mowerStart = {x: 10, y: 10};
-        this.lineStart = {x: mowerStart.x, y: mowerStart.y};
-        this.mowerLine = this.add.line(0, 0, this.lineStart.x, this.lineStart.y, mowerStart.x + 20, mowerStart.y, 0x99e550).setLineWidth(20).setOrigin(0);
+        const mowerStart = {x: 710, y: 280};        // start position of the mower
+        this.mower = this.add.existing(new Mower(this, mowerStart.x, mowerStart.y)).setDepth(1.1).setVisible(true);
+        this.mowerLine = this.add.line(0, 0, this.mower.getStartMowed().x, this.mower.getStartMowed().y, this.mower.getCurrentMowed().x, this.mower.getCurrentMowed().y, 0x99e550).setLineWidth(10).setOrigin(0).setVisible(true).setDepth(1);
 
-        this.mower = this.add.existing(new Mower(this, mowerStart.x, mowerStart.y));
-
-        // setup physics for mower
-        this.physics.add.existing(this.mower);      // add mower to physics system
-        this.mower.setCollideWorldBounds(true);     // set world bounds for the mower
+        this.mower.startMower();
 
         // add keyboard input
         this.input.on('pointerdown', () =>
         {
-            this.lawnTexture.draw(this.mowerLine);
-            this.mower.rotate(true);
-            this.mowerLine.setTo(this.mower.getStartMowed().x, this.mower.getStartMowed().y, this.mower.getCurrentMowed().x, this.mower.getCurrentMowed().y);
-        });
-
-        this.input.keyboard?.addKey('LEFT').on('down', () =>
-        {
-
-            this.lawnTexture.draw(this.mowerLine);
-            this.mower.rotate(false);
-            this.mowerLine.setTo(this.mower.getStartMowed().x, this.mower.getStartMowed().y, this.mower.getCurrentMowed().x, this.mower.getCurrentMowed().y);
-
-        });
-
-        this.input.keyboard?.addKey('RIGHT').on('down', () =>
-        {
-
-            this.lawnTexture.draw(this.mowerLine);
+            this.lawn.draw(this.mowerLine);
             this.mower.rotate(true);
             this.mowerLine.setTo(this.mower.getStartMowed().x, this.mower.getStartMowed().y, this.mower.getCurrentMowed().x, this.mower.getCurrentMowed().y);
 
-        });
+            this.lawn.draw(this.add.line(0, 0, 10, 10, 20, 20, 0xFFFFFF));
 
+        });
 
         this.input.keyboard?.addKey('SPACE').on('down', () =>
         {
 
             console.log(Date.now());
 
-            this.lawnTexture.snapshot(this.lawnTextureSnapshot);
+            this.lawn.snapshot(this.lawnTextureSnapshot);
 
         });
 
@@ -78,8 +59,10 @@ export default class TestScene extends Scene
     update()
     {
 
+        // update the mower
         this.mower.update();
 
+        // update the mower line
         this.mowerLine.setTo(this.mower.getStartMowed().x, this.mower.getStartMowed().y, this.mower.getCurrentMowed().x, this.mower.getCurrentMowed().y);
 
     }

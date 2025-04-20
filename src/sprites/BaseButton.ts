@@ -65,4 +65,9 @@ export default class BaseButton extends GameObjects.Container {
         this.disableInteractive();
     }
 
+    // set the frame of the picture
+    setFrame(frame: number) {
+        this.image.setFrame(frame);
+    }
+
 }

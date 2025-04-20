@@ -22,7 +22,7 @@ export default class BaseFrameScene extends Scene
     public frameOuter: GameObjects.Image;
     private frameMask: GameObjects.Image;
     private xOut: number;           // x position of the frame when it is outside (invisible)
-    private xIn: number;            // x position of the frame when it is inside (visible)
+    public xIn: number;            // x position of the frame when it is inside (visible)
     private startButton: UIButton;
     private tweenFrameOut: Tweens.Tween;
     private tweenButtonOut: Tweens.Tween;

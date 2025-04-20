@@ -15,7 +15,12 @@ import accountantBalancesheetImg from '../assets/images/accountant-balancesheet.
 import accountantPenImg from '../assets/images/accountant-pen.png';
 import accountantButtonImg from '../assets/images/accountant-button.png';
 import accountantValidationImg from '../assets/images/accountant-validation.png';
+import lawnBackgroundImg from '../assets/images/lawn-background.png';
+import lawnLawnImg from '../assets/images/lawn-lawn.png';
 import lawnMowerImg from '../assets/images/lawn-mower.png';
+import lawnPoolImg from '../assets/images/lawn-pool.png';
+import lawnSandImg from '../assets/images/lawn-sand.png';
+import lawnButtonImg from '../assets/images/lawn-button.png';
 
 // fonts
 import LuckiestGuyFont from '../assets/fonts/LuckiestGuy-Regular.ttf';
@@ -87,11 +92,15 @@ export default class LoadingScene extends Scene
         this.load.image('accountant-balancesheet', accountantBalancesheetImg);
         this.load.image('accountant-pen', accountantPenImg);
         this.load.image('accountant-button', accountantButtonImg);
-
+        this.load.image('lawn-background', lawnBackgroundImg);
+        this.load.image('lawn-lawn', lawnLawnImg);
+        this.load.image('lawn-pool', lawnPoolImg);
+        this.load.image('lawn-sand', lawnSandImg);
 
         // load spritesheets
         this.load.spritesheet('accountant-validation', accountantValidationImg, {frameWidth: 32, frameHeight: 32, margin: 1, spacing: 1});
-        this.load.spritesheet('lawn-mower', lawnMowerImg, {frameWidth: 40, frameHeight: 20, margin: 1, spacing: 1});
+        this.load.spritesheet('lawn-mower', lawnMowerImg, {frameWidth: 20, frameHeight: 10, margin: 1, spacing: 1});
+        this.load.spritesheet('lawn-button', lawnButtonImg, {frameWidth: 136, frameHeight: 47, margin: 1, spacing: 1});
 
         // load audio
         //this.load.audio('miss', 'assets/audio/Pew.mp3');
@@ -111,10 +120,10 @@ export default class LoadingScene extends Scene
 
 
         //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
-        //this.scene.start('Background');
+        this.scene.start('Background');
         //this.scene.launch('Menu');
-        //this.scene.launch('Game', {workSceneKey: 'Accountant', lifeSceneKey: 'Lawn'}); // TODO: Just for testing to skip the menu
-        this.scene.start('Test'); // TODO: Just for testing to skip the menu
+        this.scene.launch('Game', {workSceneKey: 'Accountant', lifeSceneKey: 'Lawn'}); // TODO: Just for testing to skip the menu
+        //this.scene.start('Test'); // TODO: Just for testing to skip the menu
     }
 
     createAnimations() {

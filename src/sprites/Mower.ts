@@ -12,6 +12,7 @@ export default class Mower extends Physics.Arcade.Sprite {
     private currentMowedOffset: {x: number, y: number};    // this defines the offset of the mowed position from the mower position
     private startMowed: {x: number, y: number};          // start position where the grass was mowed (resets after each turn)
     private currentMowed: {x: number, y: number};        // current position where the grass was mowed
+    private started: boolean = false;        // true if the mower has started mowing, false if not
 
     // Constructor
     constructor(scene: Phaser.Scene, x: number, y: number) {
@@ -22,15 +23,15 @@ export default class Mower extends Physics.Arcade.Sprite {
         this.direction = 0;
         this.speed = 20;
         this.lineOffset = {x: 0, y: 0};
-        this.mowerDimensions = {width: 20, height: 20};
-        this.mowerOffset = {x: 20, y: 0};
+        this.mowerDimensions = {width: 10, height: 10};
+        this.mowerOffset = {x: 10, y: 0};
 
         // add physics to the sprite
         scene.physics.add.existing(this);
         this.setCollideWorldBounds(true);
 
         // set the body size and offset
-        this.body!.setSize(20, 20);
+        this.body!.setSize(10, 10);
         this.body!.setOffset(this.mowerOffset.x, this.mowerOffset.y);         // offset of the body from the sprite (top left)
 
         // set the origin to the center of the mower
@@ -47,32 +48,36 @@ export default class Mower extends Physics.Arcade.Sprite {
     update() {
         super.update();
 
-        this.currentMowedOffset = {x: 0, y: 0};    // this defines the offset of the mowed position from the mower position
+        this.currentMowedOffset = {x: 0, y: 0};    // this defines the offset of the mowed position from the mower position // TODO: Remove, I think this is not needed
 
-        // move the mower
-        switch (this.direction) {
-            case 0:
-                this.setVelocity(this.speed, 0);
-                break;
-            case 1:
-                this.setVelocity(0, this.speed);
-                break;
-            case 2:
-                this.setVelocity(-this.speed, 0);
-                break;
-            case 3:
-                this.setVelocity(0, -this.speed);
-                break;
-        }
+        if (this.started) {
 
-        // set the current mowed position
-        this.currentMowed = {x: this.x + this.currentMowedOffset.x, y: this.y + this.currentMowedOffset.y};
+            // move the mower
+            switch (this.direction) {
+                case 0:
+                    this.setVelocity(this.speed, 0);
+                    break;
+                case 1:
+                    this.setVelocity(0, this.speed);
+                    break;
+                case 2:
+                    this.setVelocity(-this.speed, 0);
+                    break;
+                case 3:
+                    this.setVelocity(0, -this.speed);
+                    break;
+            }
 
-        // check if the player is blocked and stop the animation or play the animation
-        if (this.body!.blocked.none) {
-            this.anims.play('mower-walk', true);
-        } else {
-            this.anims.stop();
+            // set the current mowed position
+            this.currentMowed = {x: this.x + this.currentMowedOffset.x, y: this.y + this.currentMowedOffset.y};
+
+            // check if the player is blocked and stop the animation or play the animation
+            if (this.body!.blocked.none) {
+                this.anims.play('mower-walk', true);
+            } else {
+                this.anims.stop();
+            }
+
         }
 
     }
@@ -134,6 +139,17 @@ export default class Mower extends Physics.Arcade.Sprite {
     // get the mowed current position
     getCurrentMowed(): {x: number, y: number} {
         return this.currentMowed;
+    }
+
+    // start the mower
+    startMower() {
+        this.started = true;
+    }
+
+    // stop the mower
+    stopMower() {
+        this.started = false;
+        this.setVelocity(0, 0);
     }
 
 
