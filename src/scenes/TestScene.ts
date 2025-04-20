@@ -1,5 +1,7 @@
-import {GameObjects, Scene, Physics} from 'phaser';
+import {GameObjects, Scene} from 'phaser';
 import gameOptions from "../helper/gameOptions.ts";
+import Mower from '../sprites/Mower.ts';
+import Color = Phaser.Display.Color;
 
 // TODO: Remove this scene at the end. It is only for testing
 
@@ -7,15 +9,9 @@ export default class TestScene extends Scene
 {
 
     private lawnTexture: GameObjects.RenderTexture;
-    private mower: Physics.Arcade.Sprite;
-    private mower2: GameObjects.Rectangle;
-    private direction: number = 0;
-    private speed: number = 1;
+    private mower: Mower;
     private mowerLine: GameObjects.Line;
-    private mowerLine2: GameObjects.Polygon;
     private lineStart: {x: number, y: number};
-    private lineStart2: {x: number, y: number};
-    private polygonPoints: number[];
 
     constructor()
     {
@@ -30,83 +26,49 @@ export default class TestScene extends Scene
         this.lawnTexture.fill(0x8f974a);
 
         // create a graphics object
-        const mowerStart = {x: 20, y: 20};
+        const mowerStart = {x: 10, y: 10};
         this.lineStart = {x: mowerStart.x, y: mowerStart.y};
         this.mowerLine = this.add.line(0, 0, this.lineStart.x, this.lineStart.y, mowerStart.x + 20, mowerStart.y, 0x99e550).setLineWidth(20).setOrigin(0);
 
-        this.mower = this.physics.add.sprite(mowerStart.x, mowerStart.y, 'lawn-mower');
+        this.mower = this.add.existing(new Mower(this, mowerStart.x, mowerStart.y));
 
         // setup physics for mower
         this.physics.add.existing(this.mower);      // add mower to physics system
-        this.mower.setCollideWorldBounds(true); // set world bounds for the mower
-
-
-        //this.add.line(0, 0, 0, 100, 30, 100, 0x000000).setLineWidth(20).setOrigin(0);
-
-        // create a graphics object (mower 2)
-        const mowerStart2 = {x: 20, y: 300};
-        this.lineStart2 = {x: mowerStart2.x - 10, y: mowerStart2.y};
-        this.polygonPoints = [];
-        this.polygonPoints.push(...[this.lineStart2.x, this.lineStart2.y]);
-        this.polygonPoints.push(...[mowerStart2.x + 10, mowerStart2.y]);
-
-        this.mowerLine2 = this.add.polygon(0, 0, this.polygonPoints).setOrigin(0);
-        this.mowerLine2.setStrokeStyle(20, 0x0000ff);
-
-        this.mower2 = this.add.rectangle(mowerStart2.x, mowerStart2.y, 20, 20, 0xff00ff, 0.5).setVisible(true);
+        this.mower.setCollideWorldBounds(true);     // set world bounds for the mower
 
         // add keyboard input
-        this.input.keyboard?.addKey('SPACE').on('down', () =>
+        this.input.on('pointerdown', () =>
+        {
+            this.lawnTexture.draw(this.mowerLine);
+            this.mower.rotate(true);
+            this.mowerLine.setTo(this.mower.getStartMowed().x, this.mower.getStartMowed().y, this.mower.getCurrentMowed().x, this.mower.getCurrentMowed().y);
+        });
+
+        this.input.keyboard?.addKey('LEFT').on('down', () =>
         {
 
-
-
-            // set start line position
-            const lineOffset = {x: 0, y: 0};
-
-            // move the mower
-            switch (this.direction) {
-                case 0:
-                    lineOffset.x = 0;
-                    break;
-                case 1:
-                    lineOffset.y = 0;
-                    break;
-                case 2:
-                    lineOffset.x = 0;
-                    break;
-                case 3:
-                    lineOffset.y = 0;
-                    break;
-            }
-
             this.lawnTexture.draw(this.mowerLine);
-            this.lineStart.x = this.mower.x + lineOffset.x;
-            this.lineStart.y = this.mower.y + lineOffset.y;
-            this.mowerLine.setTo(this.lineStart.x, this.lineStart.y, this.mower.x, this.mower.y);
-
-            /*// mower 2
-            this.polygonPoints.push(this.mower2.x + lineOffset.x);
-            this.polygonPoints.push(this.mower2.y + lineOffset.y);
-            this.polygonPoints.push(this.mower2.x + lineOffset.x);
-            this.polygonPoints.push(this.mower2.y + lineOffset.y);
-            this.mowerLine2.setTo(this.polygonPoints);
-             */
+            this.mower.rotate(false);
+            this.mowerLine.setTo(this.mower.getStartMowed().x, this.mower.getStartMowed().y, this.mower.getCurrentMowed().x, this.mower.getCurrentMowed().y);
 
         });
 
-        const enterKey = this.input.keyboard?.on('down', () =>
+        this.input.keyboard?.addKey('RIGHT').on('down', () =>
         {
 
-            console.log('enter key pressed');
+            this.lawnTexture.draw(this.mowerLine);
+            this.mower.rotate(true);
+            this.mowerLine.setTo(this.mower.getStartMowed().x, this.mower.getStartMowed().y, this.mower.getCurrentMowed().x, this.mower.getCurrentMowed().y);
 
-            /*for (let i = 0; i < gameOptions.gameWidth; i++) {
-                for (let j = 0; j < gameOptions.gameHeight; j++) {
+        });
 
-                    const color = this.lawnTexture.snapshot(i, j).getPixel32(0, 0);
 
-                }
-            }*/
+        this.input.keyboard?.addKey('SPACE').on('down', () =>
+        {
+
+            console.log(Date.now());
+
+            this.lawnTexture.snapshot(this.lawnTextureSnapshot);
 
         });
 
@@ -116,43 +78,57 @@ export default class TestScene extends Scene
     update()
     {
 
-        const lineOffset = {x: 0, y: 0}
+        this.mower.update();
 
-        // move the mower
-        switch (this.direction) {
-            case 0:
-                this.mower.x += this.speed;
-                //this.mower2.x += this.speed;
-                lineOffset.x = 10;
-                break;
-            case 1:
-                this.mower.y += this.speed;
-                //this.mower2.y += this.speed;
-                lineOffset.y = 10;
-                break;
-            case 2:
-                this.mower.x -= this.speed;
-                //this.mower2.x -= this.speed;
-                lineOffset.x = -10;
-                break;
-            case 3:
-                this.mower.y -= this.speed;
-                //this.mower2.y -= this.speed;
-                lineOffset.y = -10;
-                break;
+        this.mowerLine.setTo(this.mower.getStartMowed().x, this.mower.getStartMowed().y, this.mower.getCurrentMowed().x, this.mower.getCurrentMowed().y);
+
+    }
+
+    lawnTextureSnapshot(image: HTMLImageElement | Color) {
+
+        // Check if the image is an instance of HTMLImageElement
+        if (!(image instanceof HTMLImageElement)) {
+            console.error('Invalid image type');
+            return;
         }
 
-        this.mowerLine.setTo(this.lineStart.x, this.lineStart.y, this.mower.x + lineOffset.x, this.mower.y + lineOffset.y);
+        // create an offscreen canvas (will not be added to DOM so it will be automatically garbage collected)
+        const offscreenCanvas = document.createElement('canvas');
+        offscreenCanvas.width = gameOptions.gameWidth;
+        offscreenCanvas.height = gameOptions.gameHeight;
 
-        //this.polygonPoints[this.polygonPoints.length - 2] = this.mower2.x + lineOffset.x;
-        //this.polygonPoints[this.polygonPoints.length - 1] = this.mower2.y + lineOffset.y;
-        //this.mowerLine2.setTo(this.polygonPoints);
+        const context = offscreenCanvas.getContext('2d');
+        if (!context) return;
 
+        // Draw the snapshot image onto our offscreen canvas
+        context.drawImage(image, 0, 0);
 
-        //this.lawnTexture.draw(this.mower);
+        // Now get the pixel data
+        const imageData = context.getImageData(0, 0, gameOptions.gameWidth, gameOptions.gameHeight);
+        const data = imageData.data;
 
+        let originalColorCount = 0;
+        let changedColorCount = 0;
 
+        for (let i = 0; i < data.length; i += 4) {
+            const r = data[i];
+            const g = data[i + 1];
+            const b = data[i + 2];
 
+            if (r === 143 && g === 151 && b === 74) {
+                originalColorCount++;
+            } else {
+                changedColorCount++;
+            }
+        }
+
+        const totalPixels = gameOptions.gameWidth * gameOptions.gameHeight;
+        const tracedPercent = (changedColorCount / totalPixels) * 100;
+
+        console.log(originalColorCount);
+        console.log(changedColorCount);
+
+        console.log(`Traced Area: ${tracedPercent.toFixed(2)}%`);
     }
 
 }
