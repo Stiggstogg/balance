@@ -24,6 +24,9 @@ class GameOptions {
     public readonly buttonTextStyle: Types.GameObjects.Text.TextStyle;
     public readonly accountantTitleTextStyle: Types.GameObjects.Text.TextStyle;
     public readonly accountantTextStyle: Types.GameObjects.Text.TextStyle;
+    public readonly editorPageNumberTextStyle: Types.GameObjects.Text.TextStyle;
+    public readonly editorTextStyle: Types.GameObjects.Text.TextStyle;
+    public readonly editorHighlightTextStyle: Types.GameObjects.Text.TextStyle;
 
     constructor() {
 
@@ -39,7 +42,7 @@ class GameOptions {
         this.gameHeight = 488;
 
         // time limit for each mini game
-        this.timeLimit = 30; // seconds
+        this.timeLimit = 60; // seconds
 
         // tween lengths
         this.frameTweenLength = 1000; // milliseconds
@@ -106,7 +109,7 @@ class GameOptions {
             fontFamily: 'Nunito',
             fontSize: '24px',
             color: '#000000',
-            align: 'center'
+            align: 'left'
         }
 
         this.accountantTitleTextStyle = {
@@ -119,6 +122,26 @@ class GameOptions {
             fontFamily: 'SpecialElite',
             fontSize: '24px',
             color: '#000000'
+        }
+
+        this.editorPageNumberTextStyle = {
+            fontFamily: 'SpecialElite',
+            fontSize: '18px',
+            color: '#000000'
+        }
+
+        this.editorTextStyle = {
+            fontFamily: 'SpecialElite',
+            fontSize: '28px',
+            color: '#000000'
+        }
+
+        this.editorHighlightTextStyle = {
+            fontFamily: 'SpecialElite',
+            fontSize: '28px',
+            color: '#000000',
+            //stroke: '#000000',
+            //strokeThickness: 4
         }
 
     }

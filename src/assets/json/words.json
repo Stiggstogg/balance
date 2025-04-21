@@ -1,0 +1,26 @@
+{
+  "wordsCorrect": [
+    "apple", "banana", "cherry", "mango", "orange", "grape", "peach", "kiwi", "papaya", "lemon",
+    "elephant", "tiger", "kangaroo", "giraffe", "dolphin", "penguin", "zebra", "bear", "fox", "camel",
+    "Canada", "Brazil", "Japan", "France", "Egypt", "India", "Germany", "Mexico", "Austria", "Italy",
+    "red", "blue", "green", "yellow", "purple", "orange", "pink", "brown", "black", "white",
+    "soccer", "tennis", "baseball", "basketball", "hockey", "golf", "volleyball", "cricket", "rugby", "swimming",
+    "shirt", "pants", "jacket", "hat", "socks", "scarf", "dress", "skirt", "shoes", "gloves",
+    "teacher", "doctor", "chef", "engineer", "farmer", "pilot", "nurse", "artist", "firefighter", "lawyer",
+    "guitar", "piano", "violin", "drums", "flute", "trumpet", "saxophone", "harp", "cello", "clarinet",
+    "car", "bus", "train", "airplane", "bicycle", "boat", "helicopter", "scooter", "subway", "truck",
+    "mountain", "river", "castle", "computer", "book", "garden", "bridge", "window", "island", "clock"
+  ],
+  "wordsIncorrect": [
+    "aple", "banane", "cheeri", "mangoo", "orang", "graape", "peech", "kiwii", "papaia", "lemoni",
+    "elephfant", "tigr", "kangaro", "girafe", "dolphhin", "pengin", "zebrra", "bearr", "foox", "camelel",
+    "Cannada", "Brazzil", "Jappan", "Frnce", "Egipt", "Inddia", "Germaniy", "Mexxico", "Astria", "Itaaly",
+    "redd", "bllue", "grreen", "yelow", "purpl", "orangi", "pinck", "bruwn", "blak", "wite",
+    "fotball", "tenis", "basebal", "bsketball", "hokey", "golff", "voleeyball", "crickett", "rugbi", "swiming",
+    "shrt", "pantz", "jaket", "hatt", "soks", "scrf", "dres", "skirtt", "shos", "glofes",
+    "techer", "doctr", "cheff", "enginer", "farmmer", "piloot", "nursse", "arttist", "firfighter", "lawier",
+    "guitarr", "piaano", "violyn", "drumms", "flote", "trumppet", "saxphone", "harpp", "celo", "clarinett",
+    "caar", "buus", "trin", "airplne", "bycicle", "baot", "hellicopter", "scoter", "subvvay", "truk",
+    "muntain", "riwer", "castl", "conputer", "boock", "gardden", "bridg", "windov", "izland", "clok"
+  ]
+}

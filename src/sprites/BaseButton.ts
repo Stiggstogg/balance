@@ -30,7 +30,6 @@ export default class BaseButton extends GameObjects.Container {
         this.on('pointerdown', () => {
             this.click();
         });
-
     }
 
     // Action which should happen when the sprite is clicked
@@ -53,6 +52,11 @@ export default class BaseButton extends GameObjects.Container {
     setText(text: string): void {
         this.text.setText(text);
         this.text.setPosition(-this.text.width / 2, -this.text.height / 2 + this.offset);
+    }
+
+    // get the text
+    getText(): string {
+        return this.text.text;
     }
 
     // activate button

@@ -21,6 +21,10 @@ import lawnMowerImg from '../assets/images/lawn-mower.png';
 import lawnPoolImg from '../assets/images/lawn-pool.png';
 import lawnSandImg from '../assets/images/lawn-sand.png';
 import lawnButtonImg from '../assets/images/lawn-button.png';
+import editorBookImg from '../assets/images/editor-book.png';
+import editorButtonImg from '../assets/images/editor-button.png';
+import editorSelectionImg from '../assets/images/editor-selection.png';
+import editorLineImg from '../assets/images/editor-line.png';
 
 // fonts
 import LuckiestGuyFont from '../assets/fonts/LuckiestGuy-Regular.ttf';
@@ -29,6 +33,8 @@ import SpecialEliteFont from '../assets/fonts/SpecialElite-Regular.ttf';
 
 // audio
 
+// json
+import wordsJson from '../assets/json/words.json';
 
 export default class LoadingScene extends Scene
 {
@@ -96,10 +102,14 @@ export default class LoadingScene extends Scene
         this.load.image('lawn-lawn', lawnLawnImg);
         this.load.image('lawn-pool', lawnPoolImg);
         this.load.image('lawn-sand', lawnSandImg);
+        this.load.image('editor-book', editorBookImg);
+        this.load.image('editor-button', editorButtonImg);
+        this.load.image('editor-selection', editorSelectionImg);
+        this.load.image('editor-line', editorLineImg);
 
         // load spritesheets
         this.load.spritesheet('accountant-validation', accountantValidationImg, {frameWidth: 32, frameHeight: 32, margin: 1, spacing: 1});
-        this.load.spritesheet('lawn-mower', lawnMowerImg, {frameWidth: 20, frameHeight: 10, margin: 1, spacing: 1});
+        this.load.spritesheet('lawn-mower', lawnMowerImg, {frameWidth: 40, frameHeight: 20, margin: 1, spacing: 1});
         this.load.spritesheet('lawn-button', lawnButtonImg, {frameWidth: 136, frameHeight: 47, margin: 1, spacing: 1});
 
         // load audio
@@ -109,6 +119,9 @@ export default class LoadingScene extends Scene
         this.load.font('Luckiest Guy', LuckiestGuyFont, 'truetype');
         this.load.font('Nunito', NunitoFont, 'truetype');
         this.load.font('SpecialElite', SpecialEliteFont, 'truetype');
+
+        // json
+        this.load.json('words', wordsJson);
 
     }
 
@@ -122,7 +135,7 @@ export default class LoadingScene extends Scene
         //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
         this.scene.start('Background');
         //this.scene.launch('Menu');
-        this.scene.launch('Game', {workSceneKey: 'Accountant', lifeSceneKey: 'Lawn'}); // TODO: Just for testing to skip the menu
+        this.scene.launch('Game', {workSceneKey: 'Editor', lifeSceneKey: 'Lawn'}); // TODO: Just for testing to skip the menu
         //this.scene.start('Test'); // TODO: Just for testing to skip the menu
     }
 

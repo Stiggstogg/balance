@@ -21,17 +21,17 @@ export default class Mower extends Physics.Arcade.Sprite {
 
         // set start direction and speed
         this.direction = 0;
-        this.speed = 20;
+        this.speed = 40;
         this.lineOffset = {x: 0, y: 0};
-        this.mowerDimensions = {width: 10, height: 10};
-        this.mowerOffset = {x: 10, y: 0};
+        this.mowerDimensions = {width: 20, height: 20};
+        this.mowerOffset = {x: 20, y: 0};
 
         // add physics to the sprite
         scene.physics.add.existing(this);
         this.setCollideWorldBounds(true);
 
         // set the body size and offset
-        this.body!.setSize(10, 10);
+        this.body!.setSize(this.mowerDimensions.width, this.mowerDimensions.height);
         this.body!.setOffset(this.mowerOffset.x, this.mowerOffset.y);         // offset of the body from the sprite (top left)
 
         // set the origin to the center of the mower

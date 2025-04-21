@@ -29,8 +29,7 @@ export default class AccountantScene extends BaseFrameScene
 
     constructor(config?: string | Types.Scenes.SettingsConfig)
     {
-        super(Side.WORK, 'Accountant', 'Calculate the numbers', 'Accountant');
-        //super(Side.WORK, 'LEFT', 'Do something', 'Accountant');                 // TODO: Remove at the end, just for video recording before full game reveal
+        super(Side.WORK, 'Accountant', 'Ready to crunch numbers?\nTotal the assets to complete the 2025 balance sheets!', 'Accountant');
     }
 
     create() {
@@ -255,9 +254,6 @@ export default class AccountantScene extends BaseFrameScene
 
     // handle button click
     handleButtonClick(value: number) {
-
-        // make buttons invisible
-        this.buttonGroup.setVisible(true);
 
         // write button value to the total text
         this.typewriteText(this.totalText, value);

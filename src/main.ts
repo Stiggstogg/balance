@@ -14,6 +14,7 @@ import AccountantScene from './scenes/AccountantScene';
 import LawnScene from './scenes/LawnScene.ts';
 import PointsScene from './scenes/PointsScene.ts';
 import TestScene from './scenes/TestScene.ts';
+import EditorScene from './scenes/EditorScene.ts';
 
 // other imports
 import gameOptions from './helper/gameOptions';
@@ -44,6 +45,7 @@ const config: Types.Core.GameConfig = {
         GameScene,
         LawnScene,
         AccountantScene,
+        EditorScene,
         PointsScene,
         TestScene
     ]

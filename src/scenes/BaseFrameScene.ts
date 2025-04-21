@@ -54,7 +54,7 @@ export default class BaseFrameScene extends Scene
         // positions
         const sideTitlePosY = gameOptions.gameHeight * 0.15;
         const titlePosY = gameOptions.gameHeight * 0.3;
-        const descriptionPosY = gameOptions.gameHeight * 0.50;
+        const descriptionPosY = gameOptions.gameHeight * 0.40;
 
         // create frame (from background and frame and mask)
         this.frameBack = this.add.image(0, this.framePos,'frame-back').setDepth(0.5);
@@ -65,7 +65,7 @@ export default class BaseFrameScene extends Scene
         this.sideTitle = this.add.text(0, sideTitlePosY, 'Work', gameOptions.titleTextStyle).setOrigin(0.5).setDepth(1.5);
         //this.sideTitle.setText('Title Left');       // TODO: Remove at the end, just for video recording before full game reveal
         this.title = this.add.text(0, titlePosY, this.titleString, gameOptions.subTitleTextStyle).setOrigin(0.5).setDepth(1.5);
-        this.description = this.add.text(0, descriptionPosY, this.descriptionString, gameOptions.normalTextStyle).setOrigin(0.5).setDepth(1.5);
+        this.description = this.add.text(0, descriptionPosY, this.descriptionString, gameOptions.normalTextStyle).setOrigin(0.5, 0).setDepth(1.5).setWordWrapWidth(gameOptions.gameWidth * 0.3);
 
         // define properties and add elements based on side
         if (this.side === Side.WORK) {
@@ -96,7 +96,6 @@ export default class BaseFrameScene extends Scene
 
             // titles and descriptions: Change text
             this.sideTitle.setText('Life');
-            // this.sideTitle.setText('Title Right');       // TODO: Remove at the end, just for video recording before full game reveal
         }
 
         // TODO: Remove this, at the end, as it is only needed to setup the assets in the scene during development

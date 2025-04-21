@@ -22,9 +22,10 @@ export default class TestScene extends Scene
     {
 
         // create a render texture
-        this.lawn = this.add.renderTexture(987, 37, 440, 317).setOrigin(1,0).setDepth(1);
-        this.lawn.fill(0x8f974a);
-        //this.lawn.draw('lawn-lawn', 0, 0);
+        //this.lawn = this.add.renderTexture(987, 37, 440, 317).setOrigin(1,0).setDepth(1);
+        this.lawn = this.add.renderTexture(gameOptions.gameWidth, 0, gameOptions.gameWidth, gameOptions.gameHeight).setOrigin(1,0).setDepth(1);
+        //this.lawn.fill(0x8f974a);
+        this.lawn.draw('lawn-lawn', 548, 36);
 
         // create a graphics object
         const mowerStart = {x: 710, y: 280};        // start position of the mower
@@ -40,7 +41,7 @@ export default class TestScene extends Scene
             this.mower.rotate(true);
             this.mowerLine.setTo(this.mower.getStartMowed().x, this.mower.getStartMowed().y, this.mower.getCurrentMowed().x, this.mower.getCurrentMowed().y);
 
-            this.lawn.draw(this.add.line(0, 0, 10, 10, 20, 20, 0xFFFFFF));
+            //this.lawn.draw(this.add.line(0, 0, 10, 10, 20, 20, 0xFFFFFF).setLineWidth(10));
 
         });
 
