@@ -26,7 +26,7 @@ export default class LawnScene extends BaseFrameScene
 
     constructor(config?: string | Types.Scenes.SettingsConfig)
     {
-        super(Side.LIFE, 'Lawn Mowing', 'Time to tidy up the turf!\nRotate your mower left or right to cut every patch!', 'Lawn');
+        super(Side.LIFE, 'Lawn Mowing', 'Time to tidy up the turf!\nRotate your mower left or right to cut every patch.', 'Lawn');
 
     }
 

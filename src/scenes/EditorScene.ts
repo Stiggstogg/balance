@@ -22,7 +22,7 @@ export default class EditorScene extends BaseFrameScene
 
     constructor(config?: string | Types.Scenes.SettingsConfig)
     {
-        super(Side.WORK, 'Editor', 'Sharpen your red pen!\nFind the word with the typo!', 'Editor');
+        super(Side.WORK, 'Editor', 'Sharpen your red pen!\nFind the word with the typo.', 'Editor');
     }
 
     create() {

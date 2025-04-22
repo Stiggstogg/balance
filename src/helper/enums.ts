@@ -6,6 +6,7 @@ export enum ButtonId {
     ACCOUNTANT = 'accountantBtn',
     LAWN = 'lawnBtn',
     EDITOR = 'editorBtn',
+    DANCE = 'danceBtn',
 }
 
 export enum Side {

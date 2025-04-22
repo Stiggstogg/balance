@@ -13,11 +13,14 @@ import GameScene from './scenes/GameScene';
 import AccountantScene from './scenes/AccountantScene';
 import LawnScene from './scenes/LawnScene.ts';
 import PointsScene from './scenes/PointsScene.ts';
-import TestScene from './scenes/TestScene.ts';
 import EditorScene from './scenes/EditorScene.ts';
+import DanceScene from './scenes/DanceScene.ts';
+import TestScene from './scenes/TestScene.ts';          // TODO: remove this at the end, as it is only for testing
+import TestScene2 from './scenes/TestScene2.ts';        // TODO: remove this at the end, as it is only for testing
 
 // other imports
 import gameOptions from './helper/gameOptions';
+import DanceScene from './scenes/DanceScene.ts';
 
 const config: Types.Core.GameConfig = {
     title: gameOptions.gameTitle,
@@ -44,10 +47,12 @@ const config: Types.Core.GameConfig = {
         MenuScene,
         GameScene,
         LawnScene,
+        DanceScene,
         AccountantScene,
         EditorScene,
         PointsScene,
-        TestScene
+        TestScene,          // TODO: Remove this scene at the end. It is only for testing
+        TestScene2          // TODO: Remove this scene at the end. It is only for testing
     ]
 };
 

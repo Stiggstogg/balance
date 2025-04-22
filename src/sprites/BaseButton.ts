@@ -2,7 +2,7 @@ import {GameObjects, Types} from 'phaser';
 import {ButtonId} from "../helper/enums.ts";
 
 export default class BaseButton extends GameObjects.Container {
-    private image: GameObjects.Image;
+    public image: GameObjects.Image;
     private text: GameObjects.Text;
     protected id: ButtonId;
     private offset: number = 0;

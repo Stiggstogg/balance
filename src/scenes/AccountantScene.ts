@@ -29,7 +29,7 @@ export default class AccountantScene extends BaseFrameScene
 
     constructor(config?: string | Types.Scenes.SettingsConfig)
     {
-        super(Side.WORK, 'Accountant', 'Ready to crunch numbers?\nTotal the assets to complete the 2025 balance sheets!', 'Accountant');
+        super(Side.WORK, 'Accountant', 'Ready to crunch numbers?\nTotal the assets to complete the 2025 balance sheets.', 'Accountant');
     }
 
     create() {

@@ -25,6 +25,13 @@ import editorBookImg from '../assets/images/editor-book.png';
 import editorButtonImg from '../assets/images/editor-button.png';
 import editorSelectionImg from '../assets/images/editor-selection.png';
 import editorLineImg from '../assets/images/editor-line.png';
+import danceBodyImg from '../assets/images/dance-human-body.png';
+import danceArmImg from '../assets/images/dance-human-arm.png';
+import danceBackgroundImg from '../assets/images/dance-background.png';
+import danceBubbleImg from '../assets/images/dance-bubble.png';
+import danceMovesImg from '../assets/images/dance-moves.png';
+import danceButtonImg from '../assets/images/dance-button.png';
+import danceValidationImg from '../assets/images/dance-validation.png';
 
 // fonts
 import LuckiestGuyFont from '../assets/fonts/LuckiestGuy-Regular.ttf';
@@ -106,11 +113,18 @@ export default class LoadingScene extends Scene
         this.load.image('editor-button', editorButtonImg);
         this.load.image('editor-selection', editorSelectionImg);
         this.load.image('editor-line', editorLineImg);
+        this.load.image('dance-background', danceBackgroundImg);
+        this.load.image('dance-bubble', danceBubbleImg);
+        this.load.image('dance-button', danceButtonImg);
 
         // load spritesheets
         this.load.spritesheet('accountant-validation', accountantValidationImg, {frameWidth: 32, frameHeight: 32, margin: 1, spacing: 1});
         this.load.spritesheet('lawn-mower', lawnMowerImg, {frameWidth: 40, frameHeight: 20, margin: 1, spacing: 1});
         this.load.spritesheet('lawn-button', lawnButtonImg, {frameWidth: 136, frameHeight: 47, margin: 1, spacing: 1});
+        this.load.spritesheet('dance-body', danceBodyImg, {frameWidth: 171, frameHeight: 338, margin: 1, spacing: 1});
+        this.load.spritesheet('dance-arm', danceArmImg, {frameWidth: 57, frameHeight: 205, margin: 1, spacing: 1});
+        this.load.spritesheet('dance-moves', danceMovesImg, {frameWidth: 202, frameHeight: 99, margin: 1, spacing: 1});
+        this.load.spritesheet('dance-validation', danceValidationImg, {frameWidth: 64, frameHeight: 64, margin: 1, spacing: 1});
 
         // load audio
         //this.load.audio('miss', 'assets/audio/Pew.mp3');
@@ -135,8 +149,8 @@ export default class LoadingScene extends Scene
         //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
         this.scene.start('Background');
         //this.scene.launch('Menu');
-        this.scene.launch('Game', {workSceneKey: 'Editor', lifeSceneKey: 'Lawn'}); // TODO: Just for testing to skip the menu
-        //this.scene.start('Test'); // TODO: Just for testing to skip the menu
+        this.scene.launch('Game', {workSceneKey: 'Editor', lifeSceneKey: 'Dance'}); // TODO: Just for testing to skip the menu
+        //this.scene.start('Test2'); // TODO: Just for testing to skip the menu
     }
 
     createAnimations() {
@@ -145,6 +159,13 @@ export default class LoadingScene extends Scene
             key: 'mower-walk',
             frames: this.anims.generateFrameNames('lawn-mower', {frames: [0, 1]}),
             frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'dance',
+            frames: this.anims.generateFrameNames('dance-body', {frames: [0, 1]}),
+            frameRate: 4,
             repeat: -1
         });
 

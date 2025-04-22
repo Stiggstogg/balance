@@ -18,6 +18,7 @@ class GameOptions {
     public readonly accountantTenthProb: number;                       // probability of getting a wrong result with is +/- 10 so that the user can not only check the last number
     public readonly accountantTwenthyProb: number;                     // probability of getting a wrong result with is +/- 20 so that the user can not only check the last number
     public readonly accountantNumberSwitchProb: number;                // probability of getting a wrong result where the last two numbers are inverted
+    public readonly danceMoveLength: { min: number; max: number };     // number of seconds for how long a dance move should be shown
     public readonly titleTextStyle: Types.GameObjects.Text.TextStyle;
     public readonly subTitleTextStyle: Types.GameObjects.Text.TextStyle;
     public readonly normalTextStyle: Types.GameObjects.Text.TextStyle;
@@ -66,13 +67,10 @@ class GameOptions {
         this.accountantNumberSwitchProb = 0.30;         // probability of getting a wrong result where the last two numbers are inverted
 
         // ----------------------------
-        // Scene options: Base Frame
+        // Game options: Dance
         // ----------------------------
 
-
-        // ----------------------------
-        // Scene options: Game
-        // ----------------------------
+        this.danceMoveLength = {min: 7, max: 12}        // number of seconds for how long a dance move should be shown
 
         // ---------------------
         // Text styles
