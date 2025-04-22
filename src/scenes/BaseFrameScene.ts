@@ -28,7 +28,8 @@ export default class BaseFrameScene extends Scene
     private tweenButtonOut: Tweens.Tween;
     private tweenTextsOut: Tweens.Tween;
     private tweenCountdown: Tweens.Tween;
-    protected points: number = 0;           // points for the current scene
+    protected progress: number = 0;           // progress made during the game
+    private progressText: GameObjects.Text;          // progress text (shows on the top right (work) or top left (life) the progress made
 
     constructor(side: Side, titleString: string, descriptionString: string, config?: string | Types.Scenes.SettingsConfig)
     {
@@ -67,6 +68,11 @@ export default class BaseFrameScene extends Scene
         this.title = this.add.text(0, titlePosY, this.titleString, gameOptions.subTitleTextStyle).setOrigin(0.5).setDepth(1.5);
         this.description = this.add.text(0, descriptionPosY, this.descriptionString, gameOptions.normalTextStyle).setOrigin(0.5, 0).setDepth(1.5).setWordWrapWidth(gameOptions.gameWidth * 0.3);
 
+        // progress text
+        this.progressText = this.add.text(0, 0, '100', gameOptions.progressTextStyle).setDepth(1.3).setVisible(false);
+        const progressTextXOffset = 480;    // offset of the progress text from the edge of the scene
+        let progressTextX = progressTextXOffset
+
         // define properties and add elements based on side
         if (this.side === Side.WORK) {
 
@@ -78,6 +84,10 @@ export default class BaseFrameScene extends Scene
             this.frameBack.setOrigin(0);
             this.frameOuter.setOrigin(0);
             this.frameMask.setOrigin(0);
+
+            // progress text
+            this.progressText.setOrigin(1, 0);
+            this.progressText.setText('10');
 
             // start button
             this.startButton = this.add.existing(new UIButton(this, this.buttonPos.x, 0, 'Start', ButtonId.START));
@@ -94,14 +104,14 @@ export default class BaseFrameScene extends Scene
             this.frameOuter.setOrigin(1, 0).setFlipX(true);
             this.frameMask.setOrigin(1, 0).setFlipX(true);
 
+            // progress text
+            this.progressText.setOrigin(0, 0);
+            this.progressText.setText('100 %');
+            progressTextX = gameOptions.gameWidth - progressTextXOffset;
+
             // titles and descriptions: Change text
             this.sideTitle.setText('Life');
         }
-
-        // TODO: Remove this, at the end, as it is only needed to setup the assets in the scene during development
-        // this.sideTitle.setVisible(false);
-        // this.title.setVisible(false);
-        // this.description.setVisible(false);
 
         // set start positions
         this.frameBack.setX(this.xOut);
@@ -110,6 +120,9 @@ export default class BaseFrameScene extends Scene
         this.sideTitle.setX(this.xOut + this.sideFactor * this.frameBack.width / 2);
         this.title.setX(this.sideTitle.x);
         this.description.setX(this.sideTitle.x);
+
+        // set progress text position
+        this.progressText.setPosition(progressTextX, 25);
 
         // countdown number
         this.countdown = this.add.text(this.xIn + this.sideFactor * this.frameBack.width / 2, gameOptions.gameHeight / 2, '1', gameOptions.titleTextStyle).setOrigin(0.5).setDepth(1.5).setScale(0);    // TODO: Change back to 3, this is only for faster testing
@@ -145,6 +158,9 @@ export default class BaseFrameScene extends Scene
         // change game state when the game starts
         this.events.once('startGame', () => {
             this.gameState = GameState.PLAYING;
+
+            // make progress text visible
+            this.progressText.setVisible(true);
         });
 
         // change the game state when the game stops and move out the frame
@@ -152,6 +168,9 @@ export default class BaseFrameScene extends Scene
             this.gameState = GameState.AFTER;
             this.frameMask.setVisible(true);
             this.tweenFrameOut.play();
+
+            // make progress text invisible
+            this.progressText.setVisible(false);
         });
 
     }
@@ -268,6 +287,31 @@ export default class BaseFrameScene extends Scene
                 }
 
             }
+        });
+
+    }
+
+    // change progress
+    setProgress(progress: number): void {
+
+        this.progress = progress;
+
+        // set progress text
+        if (this.side === Side.WORK) {
+            this.progressText.setText(Math.round(this.progress).toString());
+        }
+        else {
+            this.progressText.setText(Math.round(this.progress).toString() + ' %');
+        }
+
+        // titles and description out
+        this.tweens.add({
+            targets: this.progressText,
+            duration: 200,
+            scale: 1.3,
+            ease: 'Cubic.Out',
+            yoyo: true,
+            paused: false
         });
 
     }

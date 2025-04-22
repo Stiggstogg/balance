@@ -2,6 +2,7 @@ import {GameObjects, Scene} from 'phaser';
 import gameOptions from "../helper/gameOptions.ts";
 import UIButton from "../sprites/UIButton.ts";
 import {ButtonId} from "../helper/enums.ts";
+import gameManager from '../helper/GameManager.ts';
 
 export default class PointsScene extends Scene
 {
@@ -24,7 +25,15 @@ export default class PointsScene extends Scene
 
         // Change to game scene when button is clicked
         this.events.once('click' + ButtonId.PLAY, () => {
-            this.scene.start('Game', {workSceneKey: 'Accountant', lifeSceneKey: 'Lawn'});
+
+            if (gameManager.isLastStage()) {    // go back to the menu if this is the last stage
+                this.scene.start('Menu');
+
+            } else {                            // go to the next stage
+                gameManager.nextStage();        // go to the next stage
+                this.scene.start('Game');
+            }
+
         });
 
     }

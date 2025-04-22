@@ -75,6 +75,8 @@ export default class LawnScene extends BaseFrameScene
         this.buttonCounterClockwise = this.add.existing(new LawnButton(this, this.xIn - this.frameOuter.width/2 - buttonDistance/2, buttonY, ButtonId.LAWN, false)).setDepth(1.1).setVisible(false);
         this.buttonClockwise = this.add.existing(new LawnButton(this, this.xIn - this.frameOuter.width/2 + buttonDistance/2, buttonY, ButtonId.LAWN, true)).setDepth(1.1).setVisible(false);
 
+        // set the start progress value
+        this.setProgress(0);
 
         // event listeners for the button clicks
         this.events.on('click' + ButtonId.LAWN, (clockwise: boolean) => {
@@ -82,6 +84,17 @@ export default class LawnScene extends BaseFrameScene
             this.lawn.draw(this.mowerLine);
             this.mower.rotate(clockwise);
             this.mowerLine.setTo(this.mower.getStartMowed().x, this.mower.getStartMowed().y, this.mower.getCurrentMowed().x, this.mower.getCurrentMowed().y);
+
+            // get the current number of pixels mowed and show the progress
+            this.lawn.snapshot((image: HTMLImageElement | any) => {
+                this.mowedPixels = this.getLawnPixelsInColor(image, this.mowedColor);
+
+                // this part needs to be in the same function, to ensure the snapshot is finished before the calculation
+                const percentage = Math.round((this.mowedPixels / this.totalPixels) * 100);
+
+                this.setProgress(percentage);
+
+            });
 
         });
 

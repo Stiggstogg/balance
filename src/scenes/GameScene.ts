@@ -1,33 +1,26 @@
 
-import {GameObjects, Scene} from 'phaser';
+import {Scene} from 'phaser';
 import gameOptions from '../helper/gameOptions.ts';
 import {ButtonId} from '../helper/enums.ts';
-import {GameSceneData} from '../helper/interfaces.ts';
 import Watch from '../sprites/Watch.ts';
+import gameManager from '../helper/GameManager.ts';
 
 export default class GameScene extends Scene
 {
 
     private watch: Watch;
-    private gameSceneData: GameSceneData;
 
     constructor()
     {
         super('Game');
     }
 
-    init(data: GameSceneData){
-
-        this.gameSceneData = data;
-
-    }
-
     create()
     {
 
         // load the work and life scenes
-        this.scene.launch(this.gameSceneData.lifeSceneKey);
-        this.scene.launch(this.gameSceneData.workSceneKey);
+        this.scene.launch(gameManager.getNextWorkScene());
+        this.scene.launch(gameManager.getNextLifeScene());
 
         // add the watch
         this.watch = this.add.existing(new Watch(this, gameOptions.gameWidth / 2, 0, gameOptions.timeLimit));
@@ -43,19 +36,18 @@ export default class GameScene extends Scene
 
         // forward the button click event from the work scene to the life scene
         this.events.once('click' + ButtonId.START, () => {
-            this.scene.get(this.gameSceneData.lifeSceneKey).events.emit('click' + ButtonId.START);
+            this.scene.get(gameManager.getNextLifeScene()).events.emit('click' + ButtonId.START);
         });
 
         // start the timer when the coutdown is over (game starts)
-        this.scene.get(this.gameSceneData.workSceneKey).events.once('startGame', () => {
+        this.scene.get(gameManager.getNextWorkScene()).events.once('startGame', () => {
             this.watch.startTimer();
         });
 
         // forward the stop game event from the watch to the work and life scene, move the watch out of the frame
         this.events.once('stopGame', () => {
-            this.scene.get(this.gameSceneData.lifeSceneKey).events.emit('stopGame');
-            this.scene.get(this.gameSceneData.workSceneKey).events.emit('stopGame');
-
+            this.scene.get(gameManager.getNextWorkScene()).events.emit('stopGame');
+            this.scene.get(gameManager.getNextLifeScene()).events.emit('stopGame');
 
             this.tweens.add({
                 targets: this.watch,
@@ -66,8 +58,8 @@ export default class GameScene extends Scene
                 paused: false,
                 onComplete: () => {
                     // stop the life and work scene
-                    this.scene.stop(this.gameSceneData.workSceneKey);
-                    this.scene.stop(this.gameSceneData.lifeSceneKey);
+                    this.scene.stop(gameManager.getNextWorkScene());
+                    this.scene.stop(gameManager.getNextLifeScene());
 
                     // launch the points scene
                     this.scene.launch('Points');

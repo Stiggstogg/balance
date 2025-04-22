@@ -74,6 +74,9 @@ export default class EditorScene extends BaseFrameScene
         this.wordsIncorrect = Object.values(words.wordsIncorrect);              // get the correct words from the json file and create a string array out of it (Object.values is needed! As from the JSON file it is an object)
         this.wordsIndex = Array.from(Array(this.wordsCorrect.length).keys());   // create an array with the numbers 0 to 9
 
+        // set the start progress value
+        this.setProgress(0);
+
         // event listeners for game start
         this.events.once('startGame', () => {
 
@@ -204,6 +207,9 @@ export default class EditorScene extends BaseFrameScene
 
             // set the correct validation sign
             this.validation.setFrame(1);            // set the validation sign to correct
+
+            // set the progress
+            this.setProgress(this.progress + 1);
 
         }
         else {

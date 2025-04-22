@@ -2,6 +2,7 @@ import {GameObjects, Scene} from 'phaser';
 import gameOptions from "../helper/gameOptions.ts";
 import UIButton from "../sprites/UIButton.ts";
 import {ButtonId} from "../helper/enums.ts";
+import gameManager from '../helper/GameManager.ts';
 
 export default class MenuScene extends Scene
 {
@@ -27,7 +28,10 @@ export default class MenuScene extends Scene
 
         // Change to game scene when button is clicked
         this.events.once('click' + ButtonId.PLAY, () => {
-            this.scene.launch('Game', {workSceneKey: 'Accountant', lifeSceneKey: 'Lawn'});
+
+            gameManager.newGame();
+
+            this.scene.launch('Game');
             this.scene.stop();
         });
 

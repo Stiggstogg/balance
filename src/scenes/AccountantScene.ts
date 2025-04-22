@@ -83,6 +83,9 @@ export default class AccountantScene extends BaseFrameScene
         this.buttonGroup.addMultiple([this.accountantButton1, this.accountantButton2, this.accountantButton3, this.accountantButton4]);
         this.buttonGroup.setDepth(1.1).setVisible(false);
 
+        // set the start progress value
+        this.setProgress(0);
+
         // event listeners for game start
         this.events.once('startGame', () => {
 
@@ -259,8 +262,8 @@ export default class AccountantScene extends BaseFrameScene
         this.typewriteText(this.totalText, value);
 
         // check if the button value is correct
-        if (value === this.total) {         // TODO: Implement properly
-            this.points++;
+        if (value === this.total) {
+            this.setProgress(this.progress + 1);
             this.validation.setFrame(1);
 
         } else {

@@ -20,7 +20,6 @@ import TestScene2 from './scenes/TestScene2.ts';        // TODO: remove this at 
 
 // other imports
 import gameOptions from './helper/gameOptions';
-import DanceScene from './scenes/DanceScene.ts';
 
 const config: Types.Core.GameConfig = {
     title: gameOptions.gameTitle,

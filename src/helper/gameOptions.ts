@@ -18,11 +18,17 @@ class GameOptions {
     public readonly accountantTenthProb: number;                       // probability of getting a wrong result with is +/- 10 so that the user can not only check the last number
     public readonly accountantTwenthyProb: number;                     // probability of getting a wrong result with is +/- 20 so that the user can not only check the last number
     public readonly accountantNumberSwitchProb: number;                // probability of getting a wrong result where the last two numbers are inverted
+    public readonly accountantMultiplierFactor: number;                // the factor which is used to calculate from the number of correct calculations to the multiplier
+    public readonly editorMultiplierFactor: number;                   // the factor which is used to calculate from the number of correctly detected typos to the multiplier
+    public readonly lawnPointsFactor: number;                         // the factor which is used to calculate from the percentage of mowed grass to the points
     public readonly danceMoveLength: { min: number; max: number };     // number of seconds for how long a dance move should be shown
+    public readonly danceProgressUpdateInterval: number;              // interval in seconds for the progress to be updated
+    public readonly dancePointsFactor: number;                        // the factor which is used to calculate from the percentage of how long your moves were correct to the points
     public readonly titleTextStyle: Types.GameObjects.Text.TextStyle;
     public readonly subTitleTextStyle: Types.GameObjects.Text.TextStyle;
     public readonly normalTextStyle: Types.GameObjects.Text.TextStyle;
     public readonly buttonTextStyle: Types.GameObjects.Text.TextStyle;
+    public readonly progressTextStyle: Types.GameObjects.Text.TextStyle;
     public readonly accountantTitleTextStyle: Types.GameObjects.Text.TextStyle;
     public readonly accountantTextStyle: Types.GameObjects.Text.TextStyle;
     public readonly editorPageNumberTextStyle: Types.GameObjects.Text.TextStyle;
@@ -43,7 +49,7 @@ class GameOptions {
         this.gameHeight = 488;
 
         // time limit for each mini game
-        this.timeLimit = 60; // seconds
+        this.timeLimit = 60; // seconds      TODO: Set back to 60. This is only for testing purposes
 
         // tween lengths
         this.frameTweenLength = 1000; // milliseconds
@@ -61,16 +67,32 @@ class GameOptions {
         // ----------------------------
 
         this.accountantRange = {min: 100, max: 499};    // value range for the numbers to be added
-        this.accountantDeviation = {min: 1, max: 30}; // value range for the deviation of wrong results
+        this.accountantDeviation = {min: 1, max: 30};   // value range for the deviation of wrong results
         this.accountantTenthProb = 0.40;                // probability of getting a wrong result with is +/- 10 so that the user can not only check the last number
         this.accountantTwenthyProb = 0.30;              // probability of getting a wrong result with is +/- 20 so that the user can not only check the last number
         this.accountantNumberSwitchProb = 0.30;         // probability of getting a wrong result where the last two numbers are inverted
+        this.accountantMultiplierFactor = 1;            // the factor which is used to calculate from the number of correct calculations to the multiplier
+
+        // ----------------------------
+        // Game options: Editor
+        // ----------------------------
+
+        this.editorMultiplierFactor = 1;                // the factor which is used to calculate from the number of correctly detected typos to the multiplier
+
+        // ----------------------------
+        // Game options: Lawn
+        // ----------------------------
+
+        this.lawnPointsFactor = 10;                     // the factor which is used to calculate from the percentage of mowed grass to the points
 
         // ----------------------------
         // Game options: Dance
         // ----------------------------
 
         this.danceMoveLength = {min: 7, max: 12}        // number of seconds for how long a dance move should be shown
+        this.danceProgressUpdateInterval = 5;                // interval in seconds for the progress to be updated
+        this.dancePointsFactor = 10;                    // the factor which is used to calculate from the percentage of how long your moves were correct to the points
+
 
         // ---------------------
         // Text styles
@@ -101,6 +123,15 @@ class GameOptions {
             stroke: '#000000',
             strokeThickness: 4,
             align: 'center'
+        }
+
+        this.progressTextStyle = {
+            fontFamily: 'Luckiest Guy',
+            fontSize: '36px',
+            color: '#FFFFFF',
+            stroke: '#000000',
+            strokeThickness: 4,
+            align: 'right'
         }
 
         this.normalTextStyle = {

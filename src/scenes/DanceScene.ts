@@ -22,6 +22,7 @@ export default class DanceScene extends BaseFrameScene
     private danceFramesTotal: number;
     private danceFramesCorrect: number;
     private validation: GameObjects.Image;
+    private nextPorgressUpdate: number;
 
     constructor(config?: string | Types.Scenes.SettingsConfig)
     {
@@ -55,6 +56,12 @@ export default class DanceScene extends BaseFrameScene
         this.currentMoveIndex = 0;
 
         // initialize the dance frames (for points calculation)
+        this.danceFramesTotal = 0;
+        this.danceFramesCorrect = 0;
+
+        // set the start progress value and initialize the progress update timer
+        this.setProgress(100);
+        this.nextPorgressUpdate = Date.now();
 
         // event listeners for the button clicks
         this.events.on('click' + ButtonId.DANCE, (left: boolean) => {
@@ -83,6 +90,9 @@ export default class DanceScene extends BaseFrameScene
 
             // set the time when the next dance move should be triggered
             this.nextDanceMoveTime = Date.now() + Mathphaser.RND.integerInRange(gameOptions.danceMoveLength.min, gameOptions.danceMoveLength.max) * 1000;
+
+            // set the time when the next progress update should be triggered
+            this.nextPorgressUpdate = Date.now() + gameOptions.danceProgressUpdateInterval * 1000;
 
         });
 
@@ -122,10 +132,15 @@ export default class DanceScene extends BaseFrameScene
         this.background.setPosition(this.frameOuter.x + backgroundPos.x, this.frameOuter.y + backgroundPos.y);
         this.dancer.setPosition(this.frameOuter.x + dancerPos.x, this.frameOuter.y + dancerPos.y);
 
-        // check if a new dance move should be triggered
+        // check if a new dance move should be triggered and a progess update should be done
         if (this.gameState === GameState.PLAYING) {
-            if (Date.now() > this.nextDanceMoveTime) {
+            if (Date.now() >= this.nextDanceMoveTime) {
                 this.newMove();
+            }
+
+            if (Date.now() >= this.nextPorgressUpdate) {
+                this.setProgress(Math.round((this.danceFramesCorrect / this.danceFramesTotal) * 100));
+                this.nextPorgressUpdate = Date.now() + gameOptions.danceProgressUpdateInterval * 1000;
             }
         }
 
