@@ -9,6 +9,8 @@ class GameManager {
     private readonly scenesLife: string[];
     private sceneSequenceWork: string[];
     private sceneSequenceLife: string[];
+    private readonly progressDescriptionsWork: string[];
+    private readonly progressDescriptionsLife: string[];
     private progressWork: number;          // progress of the work scene
     private multiplier: number;             // multiplier of the latest work stage
     private progressLife: number;           // progress of the life scene
@@ -21,13 +23,12 @@ class GameManager {
         this.scenesWork = ['Accountant', 'Editor'];
         this.scenesLife = ['Lawn', 'Dance'];
 
+        // progress descriptions (for points scene)
+        this.progressDescriptionsWork = ['Accurate sums:', 'Typos found:'];
+        this.progressDescriptionsLife = ['Mowed grass:', 'Dance sync:'];
+
         // initialize the other variables
-        this.stage = 0;                     // current stage of the game
-        this.lastStage = false;               // true if this is the last stage
-        this.sceneSequenceWork = [];        // sequence of the work scenes
-        this.sceneSequenceLife = [];        // sequence of the life scenes
-        this.multiplier = 1;                // multiplier of the latest work stage
-        this.points = 0;                   // points of the latest life stage
+        this.newGame();
 
     }
 
@@ -39,7 +40,9 @@ class GameManager {
         this.lastStage = false;
         this.sceneSequenceWork = [];
         this.sceneSequenceLife = [];
+        this.progressWork = 0;
         this.multiplier = 1;
+        this.progressLife = 0;
         this.points = 0;
         this.totalPoints = 0;
 
@@ -108,6 +111,11 @@ class GameManager {
         return this.stage + 1;
     }
 
+    // get the total number of stages
+    public getTotalStages(): number {
+        return this.sceneSequenceWork.length;
+    }
+
     // go to the next stage
     public nextStage(): void {
         this.stage++;
@@ -160,13 +168,39 @@ class GameManager {
     }
 
     // increase the total points of the game
-    public increaseTotalPoints(points: number): void {
-        this.totalPoints += points;
+    public setTotalPoints(): void {
+        this.totalPoints += this.points * this.multiplier;
     }
 
     // check if this is the last stage
     public isLastStage(): boolean {
         return this.lastStage;
+    }
+
+    // get the progress description of the latest work scene
+    public getWorkProgressDescription(): string {
+
+        const currentScene = this.sceneSequenceWork[this.stage];
+
+        for (let i = 0; i < this.scenesWork.length; i++) {
+            if (currentScene === this.scenesWork[i]) {
+                return this.progressDescriptionsWork[i];
+            }
+        }
+        return ''
+    }
+
+    // get the progress description of the latest life scene
+    public getLifeProgressDescription(): string {
+
+        const currentScene = this.sceneSequenceLife[this.stage];
+
+        for (let i = 0; i < this.scenesLife.length; i++) {
+            if (currentScene === this.scenesLife[i]) {
+                return this.progressDescriptionsLife[i];
+            }
+        }
+        return ''
     }
 
 }

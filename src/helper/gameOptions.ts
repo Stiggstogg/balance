@@ -26,7 +26,9 @@ class GameOptions {
     public readonly danceProgressUpdateInterval: number;                // interval in seconds for the progress to be updated
     public readonly dancePointsFunctions: ResultFunction[];             // the functions which are used to calculate from the percentage of how long your moves were correct to the points
     public readonly titleTextStyle: Types.GameObjects.Text.TextStyle;
+    public readonly smallTitleTextStyle: Types.GameObjects.Text.TextStyle;
     public readonly subTitleTextStyle: Types.GameObjects.Text.TextStyle;
+    public readonly smallSubTitleTextStyle: Types.GameObjects.Text.TextStyle;
     public readonly normalTextStyle: Types.GameObjects.Text.TextStyle;
     public readonly buttonTextStyle: Types.GameObjects.Text.TextStyle;
     public readonly progressTextStyle: Types.GameObjects.Text.TextStyle;
@@ -120,6 +122,15 @@ class GameOptions {
             align: 'center'
         };
 
+        this.smallTitleTextStyle = {
+            fontFamily: 'Luckiest Guy',
+            fontSize: '40px',
+            color: '#FFFFFF',
+            stroke: '#000000',
+            strokeThickness: 7,
+            align: 'center'
+        };
+
         this.buttonTextStyle = {
             fontFamily: 'Luckiest Guy',
             fontSize: '40px',
@@ -138,9 +149,18 @@ class GameOptions {
             align: 'center'
         }
 
+        this.smallSubTitleTextStyle = {
+            fontFamily: 'Nunito',
+            fontSize: '36px',
+            color: '#FFFFFF',
+            stroke: '#000000',
+            strokeThickness: 4,
+            align: 'center'
+        }
+
         this.progressTextStyle = {
             fontFamily: 'Luckiest Guy',
-            fontSize: '36px',
+            fontSize: '32px',
             color: '#FFFFFF',
             stroke: '#000000',
             strokeThickness: 4,

@@ -7,6 +7,9 @@ export enum ButtonId {
     LAWN = 'lawnBtn',
     EDITOR = 'editorBtn',
     DANCE = 'danceBtn',
+    TOTAL  = 'totalBtn',
+    CONTINUE = 'continueBtn',
+    STOP = 'stopBtn'
 }
 
 export enum Side {
