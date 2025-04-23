@@ -2,6 +2,8 @@ import {GameObjects, Scene, Tweens, Types} from 'phaser';
 import gameOptions from '../helper/gameOptions.ts';
 import {ButtonId, GameState, Side} from '../helper/enums.ts';
 import UIButton from '../sprites/UIButton.ts';
+import {ResultFunction} from '../helper/interfaces.ts';
+import gameManager from '../helper/GameManager.ts';
 
 // Basic frame scene class with the frame and common elements
 export default class BaseFrameScene extends Scene
@@ -313,6 +315,43 @@ export default class BaseFrameScene extends Scene
             yoyo: true,
             paused: false
         });
+
+    }
+
+    // calculate and store the result (multiplier (work) or points (life))
+    calculateResult(progress: number, func: ResultFunction | ResultFunction[]): number {
+
+        // initialize variables
+        let slope = 1;
+        let offset = 0;
+
+        if (Array.isArray(func)) {          // array is provided (two segments)
+
+            // calculate the segment change point
+            const slope1 = func[0].slope;
+            const offset1 = func[0].offset;
+            const slope2 = func[1].slope;
+            const offset2 = func[1].offset;
+            const segmentChangeProgress = Math.round((offset2 - offset1) / (slope1 - slope2));
+
+            console.log(segmentChangeProgress);         // TODO: Remove at the end, just for testing
+
+            if (progress < segmentChangeProgress) {        // first segment
+                slope = slope1;
+                offset = offset1;
+            }
+            else {                              // second segment
+                slope = slope2;
+                offset = offset2;
+            }
+
+        }
+        else {                              // single function is provided
+            slope = func.slope;
+            offset = func.offset;
+        }
+
+        return Math.round(progress * slope + offset);        // calculate the result based on the progress and the function
 
     }
 

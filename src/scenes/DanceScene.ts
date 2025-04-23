@@ -5,8 +5,9 @@ import gameOptions from '../helper/gameOptions.ts';
 import Dancer from '../sprites/Dancer.ts';
 import DanceButton from '../sprites/DanceButton.ts';
 import {DanceMove} from '../helper/interfaces.ts';
+import gameManager from '../helper/GameManager.ts';
 
-// "Life: Lawn Mower" scene
+// "Life: "Dancing Class" scene
 export default class DanceScene extends BaseFrameScene
 {
 
@@ -99,6 +100,12 @@ export default class DanceScene extends BaseFrameScene
         // event listener for game stop
         this.events.once('stopGame', () => {                // game stop
 
+            // set the progress one last time
+            this.setProgress(Math.round((this.danceFramesCorrect / this.danceFramesTotal) * 100));
+
+            // calculate the multiplier based on the progress and store them in the game manager
+            gameManager.setLifeProgressPoints(this.progress, this.calculateResult(this.progress, gameOptions.dancePointsFunctions));
+
             // make the bubble, moves and buttons invisible
             this.bubble.setVisible(false);
             this.moves.setVisible(false);
@@ -108,8 +115,6 @@ export default class DanceScene extends BaseFrameScene
 
             // stop the dancer animation
             this.dancer.stopDance();
-
-            // calculate the percentage of correct moves
 
         });
 
@@ -196,6 +201,5 @@ export default class DanceScene extends BaseFrameScene
         this.nextDanceMoveTime = Date.now() + Mathphaser.RND.integerInRange(gameOptions.danceMoveLength.min, gameOptions.danceMoveLength.max) * 1000;
 
     }
-
 
 }

@@ -9,9 +9,11 @@ class GameManager {
     private readonly scenesLife: string[];
     private sceneSequenceWork: string[];
     private sceneSequenceLife: string[];
+    private progressWork: number;          // progress of the work scene
     private multiplier: number;             // multiplier of the latest work stage
-    private points: number;                // points of the latest life stage
-    private totalPoints: number;           // total points of the game
+    private progressLife: number;           // progress of the life scene
+    private points: number;                 // points of the latest life stage
+    private totalPoints: number;            // total points of the game
 
     constructor() {
 
@@ -115,19 +117,36 @@ class GameManager {
         }
     }
 
-    // set the points of the latest work scene
-    public setWorkMultiplier(multiplier: number): void {
+    // set the progress and multiplier of the latest work scene
+    public setWorkProgressMultiplier(progress: number, multiplier: number): void {
+        this.progressWork = progress;
         this.multiplier = multiplier;
+
+        console.log('Work:\nProgress: ' + this.progressWork + '\nMultiplier: ' + this.multiplier);      // TODO: Remove at the end. Just for testing
+
     }
 
-    // set the points of the latest life scene
-    public setLifePoints(points: number): void {
+    // set the progress and points of the latest life scene
+    public setLifeProgressPoints(progress: number, points: number): void {
+        this.progressLife = progress;
         this.points = points;
+
+        console.log('Life:\nProgress: ' + this.progressLife + '\nPoints: ' + this.points);              // TODO: Remove at the end. Just for testing
+    }
+
+    // get the progress of the latest work scene
+    public getWorkProgress(): number {
+        return this.progressWork;
     }
 
     // get the multiplier of the latest work scene
     public getWorkMultiplier(): number {
         return this.multiplier;
+    }
+
+    // get the progress of the latest life scene
+    public getLifeProgress(): number {
+        return this.progressLife;
     }
 
     // get the points of the latest life scene

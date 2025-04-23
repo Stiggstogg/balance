@@ -5,6 +5,7 @@ import {ButtonId, GameState, Side} from "../helper/enums.ts";
 import BaseFrameScene from "./BaseFrameScene.ts";
 import UIButton from "../sprites/UIButton.ts";
 import AccountantButton from '../sprites/AccountantButton.ts';
+import gameManager from '../helper/GameManager.ts';
 
 // "Work: Accountant" scene
 export default class AccountantScene extends BaseFrameScene
@@ -109,6 +110,11 @@ export default class AccountantScene extends BaseFrameScene
 
         // event listener for game stop
         this.events.once('stopGame', () => {
+
+            // calculate the multiplier based on the progress and store them in the game manager
+            gameManager.setWorkProgressMultiplier(this.progress, this.calculateResult(this.progress, gameOptions.accountantMultiplierFunction));
+
+            // make everything which does not slide out invisible
             this.textGroup.setVisible(false);
             this.buttonGroup.setVisible(false);
             this.cashText.setVisible(false);

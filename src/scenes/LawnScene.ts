@@ -5,6 +5,7 @@ import BaseFrameScene from './BaseFrameScene.ts';
 import Mower from '../sprites/Mower.ts';
 import LawnButton from '../sprites/LawnButton.ts';
 import gameOptions from '../helper/gameOptions.ts';
+import gameManager from '../helper/GameManager.ts';
 
 // "Life: Lawn Mower" scene
 export default class LawnScene extends BaseFrameScene
@@ -138,11 +139,14 @@ export default class LawnScene extends BaseFrameScene
                 // this part needs to be in the same function, to ensure the snapshot is finished before the calculation
                 const percentage = Math.round((this.mowedPixels / this.totalPixels) * 100);
 
-                console.log('Mowed pixels: ' + this.mowedPixels);
-                console.log('Total pixels: ' + this.totalPixels);
-                console.log('Percentage: ' + percentage + ' %');
+                // set the progress one last time
+                this.setProgress(percentage);
+
+                // calculate the multiplier based on the progress and store them in the game manager
+                gameManager.setLifeProgressPoints(this.progress, this.calculateResult(this.progress, gameOptions.lawnPointsFunctions));
 
             });
+
         });
 
         // remove all custom event listeners when the scene is destroyed
