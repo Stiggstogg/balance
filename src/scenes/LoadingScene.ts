@@ -47,6 +47,7 @@ import countdownLowSound from '../assets/audio/countdown-low.wav';
 import mowerSound from '../assets/audio/mower.mp3';
 import pointsSound from '../assets/audio/points.mp3';
 import totalPointsSound from '../assets/audio/total-points.mp3';
+import menuSongSound from '../assets/audio/menu-song.mp3';
 
 // json
 import wordsJson from '../assets/json/words.json';
@@ -143,6 +144,7 @@ export default class LoadingScene extends Scene
         this.load.audio('mower', mowerSound);
         this.load.audio('points', pointsSound);
         this.load.audio('total-points', totalPointsSound);
+        this.load.audio('menu-song', menuSongSound);
 
         // fonts
         this.load.font('Luckiest Guy', LuckiestGuyFont, 'truetype');

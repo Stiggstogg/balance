@@ -269,6 +269,9 @@ export default class BaseFrameScene extends Scene
     // start countdown
     private startCountdown(): void {
 
+        const menuSong = this.sound.get('menu-song');        // pause the menu song
+
+
         // create the countdown tween
         this.tweenCountdown = this.tweens.add({
             targets: this.countdown,
