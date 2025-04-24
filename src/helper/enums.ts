@@ -9,7 +9,8 @@ export enum ButtonId {
     DANCE = 'danceBtn',
     TOTAL  = 'totalBtn',
     CONTINUE = 'continueBtn',
-    STOP = 'stopBtn'
+    STOP = 'stopBtn',
+    MENU = 'menuBtn'
 }
 
 export enum Side {

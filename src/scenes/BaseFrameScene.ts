@@ -66,7 +66,6 @@ export default class BaseFrameScene extends Scene
 
         // titles and descriptions
         this.sideTitle = this.add.text(0, sideTitlePosY, 'Work', gameOptions.titleTextStyle).setOrigin(0.5).setDepth(1.5);
-        //this.sideTitle.setText('Title Left');       // TODO: Remove at the end, just for video recording before full game reveal
         this.title = this.add.text(0, titlePosY, this.titleString, gameOptions.subTitleTextStyle).setOrigin(0.5).setDepth(1.5);
         this.description = this.add.text(0, descriptionPosY, this.descriptionString, gameOptions.normalTextStyle).setOrigin(0.5, 0).setDepth(1.5).setWordWrapWidth(gameOptions.gameWidth * 0.3);
 
@@ -127,7 +126,7 @@ export default class BaseFrameScene extends Scene
         this.progressText.setPosition(progressTextX, 25);
 
         // countdown number
-        this.countdown = this.add.text(this.xIn + this.sideFactor * this.frameBack.width / 2, gameOptions.gameHeight / 2, '1', gameOptions.titleTextStyle).setOrigin(0.5).setDepth(1.5).setScale(0);    // TODO: Change back to 3, this is only for faster testing
+        this.countdown = this.add.text(this.xIn + this.sideFactor * this.frameBack.width / 2, gameOptions.gameHeight / 2, '3', gameOptions.titleTextStyle).setOrigin(0.5).setDepth(1.5).setScale(0);    // TODO: Change back to 3, this is only for faster testing
 
         // add tweens (and play the first one)
         this.addTweens();
@@ -333,8 +332,6 @@ export default class BaseFrameScene extends Scene
             const slope2 = func[1].slope;
             const offset2 = func[1].offset;
             const segmentChangeProgress = Math.round((offset2 - offset1) / (slope1 - slope2));
-
-            console.log(segmentChangeProgress);         // TODO: Remove at the end, just for testing
 
             if (progress < segmentChangeProgress) {        // first segment
                 slope = slope1;

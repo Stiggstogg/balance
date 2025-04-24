@@ -1,4 +1,4 @@
-import {GameObjects, Scene} from 'phaser';
+import {GameObjects, Scene, Tweens} from 'phaser';
 import gameOptions from "../helper/gameOptions.ts";
 import UIButton from "../sprites/UIButton.ts";
 import {ButtonId} from "../helper/enums.ts";
@@ -20,24 +20,32 @@ export default class PointsScene extends Scene
     private lifePointsValue: GameObjects.Text;
     private totalPointsTitle: GameObjects.Text;
     private totalPointsValue: GameObjects.Text;
+    private finalPointsTitle: GameObjects.Text;
 
     private startY: number;
     private distanceY: number;
     private positionLeftRight: number;
     private positionLeftRightDistance: number;
 
-    private tweenHideDescriptions: Phaser.Tweens.Tween;
-    private tweenTotalButtonOut: Phaser.Tweens.Tween;
-    private tweenContinueButtonOut: Phaser.Tweens.Tween;
-    private tweenStopButtonOut: Phaser.Tweens.Tween;
-    private tweenTitleOut: Phaser.Tweens.Tween;
-    private tweenStageTitleOut: Phaser.Tweens.Tween;
-    private tweenTotalPointsTitleOut: Phaser.Tweens.Tween;
-    private tweenTotalPointsValueOut: Phaser.Tweens.Tween;
+    private tweenDuration: number;
+    private tweenEase: string;
+    private tweenStagePoints: Tweens.TweenChain;
+    private tweenTotalPoints: Tweens.TweenChain;
+    private tweenContinue: Tweens.TweenChain;
+    private tweenFinalPoints: Tweens.TweenChain;
+    private tweenContinueStopButtonOut: Tweens.Tween;
+    private tweenTitleOut: Tweens.Tween;
+    private tweenStageTitleOut: Tweens.Tween;
+    private tweenTotalPointsTitleOut: Tweens.Tween;
+    private tweenTotalPointsValueOut: Tweens.Tween;
+    private tweenMenuButtonOut: Tweens.Tween;
+    private tweenFinalTitleOut: Tweens.Tween;
+    private tweenTotalPointsValueOutSlow: Tweens.Tween;
 
     private totalButton: UIButton;
     private continueButton: UIButton;
     private stopButton: UIButton;
+    private menuButton: UIButton;
 
     constructor()
     {
@@ -55,6 +63,7 @@ export default class PointsScene extends Scene
 
         // Title
         this.title = this.add.text(gameOptions.gameWidth / 2, 0, 'Points', gameOptions.titleTextStyle).setOrigin(0.5, 1);
+        this.finalPointsTitle = this.add.text(gameOptions.gameWidth / 2 - 309, 0, 'Final', gameOptions.titleTextStyle).setOrigin(0, 1);      // the x position of "Final " needs to be very accurate as it needs to perfectly align with the "Point"
 
         // Stage title
         this.stageTitle = this.add.text(gameOptions.gameWidth / 2, gameOptions.gameHeight, 'Stage ' + gameManager.getStage() + ' / ' + gameManager.getTotalStages(), gameOptions.smallTitleTextStyle).setOrigin(0.5, 0);
@@ -94,11 +103,53 @@ export default class PointsScene extends Scene
         this.stopButton.setY(gameOptions.gameHeight + this.stopButton.image.height/2);
         this.stopButton.deactivate();
 
+        this.menuButton = this.add.existing(new UIButton(this, gameOptions.gameWidth / 2, 0, 'Menu', ButtonId.MENU));
+        this.menuButton.setY(gameOptions.gameHeight + this.menuButton.image.height/2);
+        this.menuButton.deactivate();
+
         // Button to go to the total point calculation
         this.events.once('click' + ButtonId.TOTAL, () => {
 
-            this.tweenHideDescriptions.play();
-            this.tweenTotalButtonOut.play();        // move button out and deactivate it
+            // play the total points animation
+            this.tweenTotalPoints.play();
+
+            // When this is the last stage show the final points tweens, if not show the continue / stop buttons
+            this.tweenTotalPoints.once('complete', () => {
+
+                if (gameManager.isLastStage()) {
+
+                    // play the final points tween
+                    this.tweenFinalPoints.play();
+
+                }
+                else {
+
+                    // move continue button in
+                    this.tweens.add({
+                        targets: this.continueButton,
+                        duration: this.tweenDuration / 2,
+                        y: gameOptions.gameHeight * 0.85,
+                        ease: this.tweenEase,
+                        onComplete: () => {
+                            this.continueButton.activate();
+                        }
+                    });
+
+                    // move stop button in
+                    this.tweens.add({
+                        targets: this.stopButton,
+                        delay: this.tweenDuration / 4,
+                        duration: this.tweenDuration / 2,
+                        y: gameOptions.gameHeight * 0.92,
+                        ease: this.tweenEase,
+                        onComplete: () => {
+                            this.stopButton.activate();
+                        }
+                    });
+
+                }
+
+            });
 
         });
 
@@ -106,8 +157,7 @@ export default class PointsScene extends Scene
         this.events.once('click' + ButtonId.CONTINUE, () => {
 
             // move buttons out
-            this.tweenContinueButtonOut.play();
-            this.tweenStopButtonOut.play();
+            this.tweenContinueStopButtonOut.play();
 
             // move titles and total points out
             this.tweenTitleOut.play();
@@ -124,420 +174,429 @@ export default class PointsScene extends Scene
 
         });
 
-        // Change to game scene when button is clicked
-        this.events.once('click' + ButtonId.STOP, () => {
+        // Change to menu scene when the menu button is clicked
+        this.events.once('click' + ButtonId.MENU, () => {
 
             // move buttons out
-            this.tweenContinueButtonOut.play();
-            this.tweenStopButtonOut.play();
+            this.tweenMenuButtonOut.play();
 
             // move titles and total points out
-            this.tweenTitleOut.play();
-            this.tweenStageTitleOut.play();
-            this.tweenTotalPointsTitleOut.play();
-            this.tweenTotalPointsValueOut.play();
+            this.tweenFinalTitleOut.play();
+            this.tweenTotalPointsValueOutSlow.play();
 
-            this.tweenTitleOut.once('complete', () => {
+            this.tweenFinalTitleOut.once('complete', () => {
                 this.scene.start('Menu');
             });
-
 
         });
 
         // add tweens
+        this.tweenDuration = 500;                                  // set the typical duration of the tweens
+        this.tweenEase = 'Cubic.Out';                               // set the typical ease function
+
+        this.playStagePointsTween();
+        this.addTotalPointsTween();
+        this.addFinalPointsTween();
         this.addTweens();
 
     }
 
-    // add and play tweens
+    // add and play the stage point tween
+    playStagePointsTween() {
+
+        this.tweenStagePoints = this.tweens.chain({
+            tweens: [
+                {
+                    targets: this.title,                                    // 1. move title in
+                    duration: this.tweenDuration,
+                    y: this.startY,
+                    ease: this.tweenEase,
+                    onStart: () => {
+                        this.tweens.add({                                   // 1. move stage title in
+                            targets: this.stageTitle,
+                            duration: this.tweenDuration,
+                            y: this.startY + this.distanceY * 0.25,
+                            ease: this.tweenEase
+                        });
+                    }
+                },
+                {
+                    targets: this.workTitle,                                // 2. move work title in
+                    duration: this.tweenDuration,
+                    x: this.positionLeftRight,
+                    ease: this.tweenEase,
+                    onStart: () => {
+                        this.tweens.add({                                   // 2. move life title in
+                            targets: this.lifeTitle,
+                            duration: this.tweenDuration,
+                            x: gameOptions.gameWidth - this.positionLeftRight,
+                            ease: this.tweenEase,
+                        });
+                    }
+                },
+                {
+                    targets: [this.workProgressName, this.lifeProgressName],    // 3. move work and life progress names in
+                    duration: this.tweenDuration,
+                    y: this.startY + 9 * this.distanceY,
+                    ease: this.tweenEase,
+                    onStart: () => {                                        // 3.5. move work and life multiplier / points names in
+                        this.tweens.add({
+                            targets: [this.workMultiplierName, this.lifePointsName],
+                            delay: this.tweenDuration / 2,
+                            duration: this.tweenDuration,
+                            y: this.startY + 13 * this.distanceY,
+                            ease: this.tweenEase,
+                        });
+                    }
+                },
+                {
+                    targets: this.workProgressValue,                            // 4. move work progress value in
+                    delay: this.tweenDuration,
+                    duration: this.tweenDuration / 4,
+                    scale: 1.3,
+                    ease: this.tweenEase,
+                    yoyo: true,
+                    onStart: () => {
+                        // show the work progress value
+                        this.workProgressValue.setVisible(true);
+                    },
+                },
+                {
+                    targets: this.workMultiplierValue,                          // 5. move work multiplier value in
+                    delay: this.tweenDuration,
+                    duration: this.tweenDuration / 4,
+                    scale: 1.3,
+                    ease: this.tweenEase,
+                    yoyo: true,
+                    onStart: () => {
+                        // show the work progress value
+                        this.workMultiplierValue.setVisible(true);
+                    },
+                },
+                {
+                    targets: this.lifeProgressValue,                            // 6. move life progress value in
+                    delay: this.tweenDuration,
+                    duration: this.tweenDuration / 4,
+                    scale: 1.3,
+                    ease: this.tweenEase,
+                    yoyo: true,
+                    onStart: () => {
+                        // show the work progress value
+                        this.lifeProgressValue.setVisible(true);
+                    },
+                },
+                {                                                               // 7. move life points value in
+                    targets: this.lifePointsValue,
+                    delay: this.tweenDuration,
+                    duration: this.tweenDuration / 4,
+                    scale: 1.3,
+                    ease: this.tweenEase,
+                    yoyo: true,
+                    onStart: () => {
+                        // show the work progress value
+                        this.lifePointsValue.setVisible(true);
+                    },
+                },
+                {                                                               // 8. move total button in
+                    targets: this.totalButton,
+                    duration: this.tweenDuration / 2,
+                    y: gameOptions.gameHeight * 0.85,
+                    ease: this.tweenEase,
+                    onComplete: () => {
+                        this.totalButton.activate();
+                    }
+                }
+            ]
+        });
+    }
+
+    // add the total points tween
+    addTotalPointsTween() {
+
+        const distanceMultiplierPoints = gameOptions.gameWidth *0.004;          // distance between the multiplier and the points when their are multiplied
+
+        this.tweenTotalPoints = this.tweens.chain({
+            paused: true,
+            tweens: [
+                {                                                                                   // 1. hide all work and life descriptions
+                    targets: [
+                        this.workTitle, this.lifeTitle,
+                        this.workProgressName, this.lifeProgressName,
+                        this.workProgressValue, this.lifeProgressValue,
+                        this.workMultiplierName, this.lifePointsName],
+                    delay: this.tweenDuration,
+                    duration: this.tweenDuration / 4,
+                    scale: 0,
+                    ease: this.tweenEase,
+                    onStart: () => {
+                        this.tweens.add({                                                           // 1. move total button out
+                            targets: this.totalButton,
+                            duration: this.tweenDuration / 2,
+                            y: gameOptions.gameHeight + this.totalButton.image.height / 2,
+                            ease: this.tweenEase,
+                            onStart: () => {
+                                this.totalButton.deactivate();
+                            }
+                        });
+                    },
+                    onComplete: () => {
+
+                        // hide everything
+                        this.workTitle.setVisible(false);
+                        this.lifeTitle.setVisible(false);
+                        this.workProgressName.setVisible(false);
+                        this.lifeProgressName.setVisible(false);
+                        this.workProgressValue.setVisible(false);
+                        this.lifeProgressValue.setVisible(false);
+                        this.workMultiplierName.setVisible(false);
+                        this.lifePointsName.setVisible(false);
+                    }
+                },
+                {                                                                                              // 2. move multiplier
+                    targets: this.workMultiplierValue,
+                    delay: this.tweenDuration,
+                    duration: this.tweenDuration,
+                    x: gameOptions.gameWidth / 2 + distanceMultiplierPoints,
+                    y: this.startY + 5 * this.distanceY,
+                    ease: this.tweenEase,
+                    onStart: () => {                                                                     // 2. move points
+                        this.tweens.add({
+                            targets: this.lifePointsValue,
+                            duration: this.tweenDuration,
+                            x: gameOptions.gameWidth / 2 - distanceMultiplierPoints - this.lifePointsValue.width,
+                            y: this.startY + 5 * this.distanceY,
+                            ease: this.tweenEase,
+                            onComplete: () => {
+
+                                // change origin and adapt position
+                                this.lifePointsValue.setOrigin(1, 0);
+                                this.lifePointsValue.setX(gameOptions.gameWidth / 2 - distanceMultiplierPoints);
+
+                            }
+                        });
+                    }
+                },
+                {
+                    targets: this.workMultiplierValue,                                                          // 3. Make multiplier value scale and then hide and show the multiplied points
+                    duration: this.tweenDuration,
+                    scaleX: 1.3,
+                    yoyo: true,
+                    ease: this.tweenEase,
+                    onComplete: () => {
+
+                        // hide the work multiplier value
+                        this.workMultiplierValue.setVisible(false);
+
+                        // move the points into the middle and show the multiplied points
+                        this.lifePointsValue.setOrigin(0.5, 0);
+                        this.lifePointsValue.setX(gameOptions.gameWidth / 2);
+                        this.lifePointsValue.setText(String(gameManager.getLifePoints() * gameManager.getWorkMultiplier()));
+                    }
+                },
+                {
+                    targets: this.totalPointsTitle,                                                             // 4. move total points title in
+                    duration: this.tweenDuration,
+                    y: this.startY + 10 * this.distanceY,
+                    ease: this.tweenEase,
+                    onStart: () => {
+                        this.tweens.add({                                                                       // 4. move the total points value in
+                            targets: this.totalPointsValue,
+                            duration: this.tweenDuration,
+                            y: this.startY + 14 * this.distanceY,
+                            ease: this.tweenEase,
+                        });
+                    }
+                },
+                {
+                    targets: this.lifePointsValue,                                                              // 5. move the stage points value down
+                    delay: this.tweenDuration,
+                    duration: this.tweenDuration / 2,
+                    y: this.startY + 14 * this.distanceY,
+                    ease: this.tweenEase,
+                    onComplete: () => {
+
+                        // hide the life points value
+                        this.lifePointsValue.setVisible(false);
+
+                    }
+                },
+                {
+                    targets: this.totalPointsValue,                                                             // 6. stretch the total points text and then calculate the new total points and show the value
+                    duration: this.tweenDuration / 4,
+                    scaleY: 1.3,
+                    ease: this.tweenEase,
+                    yoyo: true,
+                    onComplete: () => {
+
+                        // calculate the new total points
+                        gameManager.setTotalPoints();
+
+                        // show the new total points
+                        this.totalPointsValue.setText(gameManager.getTotalPoints().toString());
+                    }
+                }
+            ]
+        });
+
+    }
+
+    // add the final points tween
+    addFinalPointsTween() {
+
+        this.tweenFinalPoints = this.tweens.chain({
+            paused: true,
+            tweens: [
+                {                                                                               // 1. make stage and total points title disappear
+                    targets: [
+                        this.stageTitle, this.totalPointsTitle],
+                    duration: this.tweenDuration / 2,
+                    scale: 0,
+                    ease: this.tweenEase,
+                    onComplete: () => {
+
+                        // hide everything
+                        this.stageTitle.setVisible(false);
+                        this.totalPointsTitle.setVisible(false);
+
+                    }
+                },
+                {                                                                               // 2. move final points title in (and hide the title)
+                    targets: this.finalPointsTitle,
+                    duration: this.tweenDuration,
+                    y: this.startY,
+                    ease: this.tweenEase,
+                    onComplete: () => {
+
+                        this.finalPointsTitle.setText('Final Points');
+                        this.title.setVisible(false);                // hide the title
+
+                        // move the final points title to the middle                            // 3. Move the final points title to the middle (this needs to be done here, as otherwise the title will not move into the middle (width is not set if I do it in a chain)
+                        this.tweens.add({
+                            targets: this.finalPointsTitle,
+                            duration: this.tweenDuration,
+                            x: gameOptions.gameWidth/2 - this.finalPointsTitle.width/2,
+                            ease: this.tweenEase,
+                        })
+                    }
+                },
+                {                                                                               // 4. Scale points up and balce them in the middle
+                    targets: this.totalPointsValue,
+                    delay: this.tweenDuration,         // delay is needed here, because of the woraround above of moving the title into the middle
+                    duration: this.tweenDuration,
+                    y: gameOptions.gameHeight * 0.40,
+                    scale: 1,
+                    ease: this.tweenEase,
+                    onStart: () => {
+                        this.totalPointsValue.setStyle(gameOptions.titleTextStyle);
+                        this.totalPointsValue.setScale(0.57);
+                    },
+                },
+                {
+                    targets: this.menuButton,                                                   // 5. Move menu button in
+                    duration: this.tweenDuration / 2,
+                    y: gameOptions.gameHeight * 0.85,
+                    ease: this.tweenEase,
+                    onComplete: () => {
+                        this.menuButton.activate();
+                    }
+                }
+            ]
+        });
+
+    }
+
     addTweens() {
 
-        // parameters
-        const inDuration = 500;                                     // duration of the tween
-        const inEase = 'Cubic.Out';                                 // ease function
-
-        // title in
-        this.tweens.add({
-            targets: this.title,
-            duration: inDuration,
-            y: this.startY,
-            ease: inEase,
-            paused: false,
-            onComplete: () => {                                      // show the button when the title is in
-                tweenWorkIn.play();                                     // play the work title tween
-                tweenLifeIn.play();                                     // play the life title tween
-            }
-        });
-
-        // Stage title in
-        this.tweens.add({
-            targets: this.stageTitle,
-            duration: inDuration,
-            y: this.startY + this.distanceY * 0.25,
-            ease: inEase,
-            paused: false
-        });
-
-        // Work title in
-        const tweenWorkIn = this.tweens.add({
-            targets: this.workTitle,
-            duration: inDuration,
-            x: this.positionLeftRight,
-            ease: inEase,
-            paused: true,
-            onComplete: () => {
-                progressNameIn.play();
-                multiplierPointsNameIn.play();
-            }
-        });
-
-        // Life title in
-        const tweenLifeIn = this.tweens.add({
-            targets: this.lifeTitle,
-            duration: inDuration,
-            x: gameOptions.gameWidth - this.positionLeftRight,
-            ease: inEase,
-            paused: true
-        });
-
-        // Work and life progress names in
-        const progressNameIn = this.tweens.add({
-            targets: [this.workProgressName, this.lifeProgressName],
-            duration: inDuration,
-            y: this.startY + 9 * this.distanceY,
-            ease: inEase,
-            paused: true,
-            onComplete: () => {
-                workProgressValueIn.play();                         // play the work progress value tween
-            }
-        });
-
-        // Work and life multiplier / points names in
-        const multiplierPointsNameIn = this.tweens.add({
-            targets: [this.workMultiplierName, this.lifePointsName],
-            delay: inDuration / 2,
-            duration: inDuration,
-            y: this.startY + 13 * this.distanceY,
-            ease: inEase,
-            paused: true
-        });
-
-        // work progess value in
-        const workProgressValueIn = this.tweens.add({
-            targets: this.workProgressValue,
-            delay: inDuration,
-            duration: inDuration / 4,
-            scale: 1.3,
-            ease: inEase,
-            yoyo: true,
-            paused: true,
-            onStart: () => {
-                this.workProgressValue.setVisible(true);            // show the work progress value
-            },
-            onComplete: () => {
-                workMultiplierValueIn.play();
-            }
-        });
-
-        // work multiplier value in
-        const workMultiplierValueIn = this.tweens.add({
-            targets: this.workMultiplierValue,
-            delay: inDuration,
-            duration: inDuration / 4,
-            scale: 1.3,
-            ease: inEase,
-            yoyo: true,
-            paused: true,
-            onStart: () => {
-                this.workMultiplierValue.setVisible(true);            // show the work progress value
-            },
-            onComplete: () => {
-                lifeProgressValueIn.play();
-            }
-        });
-
-        // life progess value in
-        const lifeProgressValueIn = this.tweens.add({
-            targets: this.lifeProgressValue,
-            delay: inDuration,
-            duration: inDuration / 4,
-            scale: 1.3,
-            ease: inEase,
-            yoyo: true,
-            paused: true,
-            onStart: () => {
-                this.lifeProgressValue.setVisible(true);            // show the work progress value
-            },
-            onComplete: () => {
-                lifePointsValueIn.play();
-            }
-        });
-
-        // life points value in
-        const lifePointsValueIn = this.tweens.add({
-            targets: this.lifePointsValue,
-            delay: inDuration,
-            duration: inDuration / 4,
-            scale: 1.3,
-            ease: inEase,
-            yoyo: true,
-            paused: true,
-            onStart: () => {
-                this.lifePointsValue.setVisible(true);            // show the work progress value
-            },
-            onComplete: () => {
-                totalButtonIn.play();
-            }
-        });
-
-        // total button In
-        const totalButtonIn = this.tweens.add({
-            targets: this.totalButton,
-            duration: inDuration / 2,
-            y: gameOptions.gameHeight * 0.85,
-            ease: inEase,
-            paused: true,
-            onComplete: () => {
-                this.totalButton.activate();
-            }
-        });
-
-        // hide all work and life descriptions and values
-        this.tweenHideDescriptions = this.tweens.add({
-            targets: [
-                this.workTitle, this.lifeTitle,
-                this.workProgressName, this.lifeProgressName,
-                this.workProgressValue, this.lifeProgressValue,
-                this.workMultiplierName, this.lifePointsName],
-            delay: inDuration,
-            duration: inDuration / 4,
-            scale: 0,
-            ease: inEase,
-            paused: true,
-            onComplete: () => {
-
-                // hide everything
-                this.workTitle.setVisible(false);
-                this.lifeTitle.setVisible(false);
-                this.workProgressName.setVisible(false);
-                this.lifeProgressName.setVisible(false);
-                this.workProgressValue.setVisible(false);
-                this.lifeProgressValue.setVisible(false);
-                this.workMultiplierName.setVisible(false);
-                this.lifePointsName.setVisible(false);
-
-                moveMultiplier.play();
-                movePoints.play();
-            }
-        });
-
-        const distanceMultiplierPoints = gameOptions.gameWidth *0.004;
-
-        // move multiplier
-        const moveMultiplier = this.tweens.add({
-            targets: this.workMultiplierValue,
-            delay: inDuration ,
-            duration: inDuration,
-            x: gameOptions.gameWidth / 2 + distanceMultiplierPoints,
-            y: this.startY + 5 * this.distanceY,
-            ease: inEase,
-            paused: true,
-            onComplete: () => {
-
-            }
-        });
-
-        // move points
-        const movePoints = this.tweens.add({
-            targets: this.lifePointsValue,
-            delay: inDuration ,
-            duration: inDuration,
-            x: gameOptions.gameWidth / 2 - distanceMultiplierPoints - this.lifePointsValue.width,
-            y: this.startY + 5 * this.distanceY,
-            ease: inEase,
-            paused: true,
-            onComplete: () => {
-
-                // change origin and adapt position
-                this.lifePointsValue.setOrigin(1, 0);
-                this.lifePointsValue.setX(gameOptions.gameWidth / 2 - distanceMultiplierPoints);
-
-                // do the multiplication
-                multiplication.play();
-
-            }
-        });
-
-        // total button out
-        this.tweenTotalButtonOut = this.tweens.add({
-            targets: this.totalButton,
-            duration: inDuration / 2,
-            y: gameOptions.gameHeight + this.totalButton.image.height / 2,
-            ease: inEase,
-            paused: true,
-            onStart: () => {
-                this.totalButton.deactivate();
-            }
-        });
-
-        // do multiplication of points
-        const multiplication = this.tweens.add({
-            targets: this.workMultiplierValue,
-            duration: inDuration,
-            scale: 1.3,
-            yoyo: true,
-            ease: inEase,
-            paused: true,
-            onComplete: () => {
-                this.workMultiplierValue.setVisible(false);            // hide the work multiplier value
-                this.lifePointsValue.setOrigin(0.5, 0);
-                this.lifePointsValue.setX(gameOptions.gameWidth / 2);
-                this.lifePointsValue.setText(String(gameManager.getLifePoints() * gameManager.getWorkMultiplier()));
-
-                // bring in the title and the total points
-                totalTitleIn.play();
-                totalValueIn.play();
-            }
-        });
-
-        // total points title in
-        const totalTitleIn = this.tweens.add({
-            targets: this.totalPointsTitle,
-            duration: inDuration,
-            y: this.startY + 10 * this.distanceY,
-            ease: inEase,
-            paused: true
-        });
-
-        // total points value in
-        const totalValueIn = this.tweens.add({
-            targets: this.totalPointsValue,
-            duration: inDuration,
-            y: this.startY + 14 * this.distanceY,
-            ease: inEase,
-            paused: true,
-            onComplete: () => {
-                addPoints.play();
-            }
-        });
-
-        // add stage points
-        const addPoints = this.tweens.add({
-            targets: this.lifePointsValue,
-            delay: inDuration,
-            duration: inDuration / 2,
-            y: this.startY + 14 * this.distanceY,
-            ease: inEase,
-            paused: true,
-            onComplete: () => {
-                this.lifePointsValue.setVisible(false);            // hide the life points value
-
-                // calculate the new total points
-                gameManager.setTotalPoints();
-
-                // play the animation to increase the total points
-                totalPointsIncrease.play();
-            }
-        });
-
-        // total points increase
-        const totalPointsIncrease = this.tweens.add({
-            targets: this.totalPointsValue,
-            duration: inDuration / 4,
-            scaleY: 1.3,
-            ease: inEase,
-            yoyo: true,
-            paused: true,
-            onComplete: () => {
-                this.totalPointsValue.setText(gameManager.getTotalPoints().toString());
-
-                // move continue and stop button in
-                continueButtonIn.play();
-                stopButtonIn.play();
-            }
-        });
-
-        // move continue button in
-        const continueButtonIn = this.tweens.add({
-            targets: this.continueButton,
-            duration: inDuration / 2,
-            y: gameOptions.gameHeight * 0.85,
-            ease: inEase,
-            paused: true,
-            onComplete: () => {
-                this.continueButton.activate();
-            }
-        });
-
-        // move stop button in
-        const stopButtonIn = this.tweens.add({
-            targets: this.stopButton,
-            delay: inDuration / 4,
-            duration: inDuration / 2,
-            y: gameOptions.gameHeight * 0.92,
-            ease: inEase,
-            paused: true,
-            onComplete: () => {
-                this.stopButton.activate();
-            }
-        });
-
-        // move continue button out
-        this.tweenContinueButtonOut = this.tweens.add({
-            targets: this.continueButton,
-            delay: inDuration / 4,
-            duration: inDuration / 2,
+        // move continue and stop button out
+        this.tweenContinueStopButtonOut = this.tweens.add({
+            targets: this.continueButton,                                       // continue button out
+            delay: this.tweenDuration / 4,
+            duration: this.tweenDuration / 2,
             y: gameOptions.gameHeight + this.continueButton.image.height / 2,
-            ease: inEase,
-            paused: true
-        });
+            ease: this.tweenEase,
+            paused: true,
+            onStart: () => {
 
-        // move stop button out
-        this.tweenStopButtonOut = this.tweens.add({
-            targets: this.stopButton,
-            duration: inDuration / 2,
-            y: gameOptions.gameHeight + this.stopButton.image.height / 2,
-            ease: inEase,
-            paused: true
+                // deactivate buttons
+                this.continueButton.deactivate();
+                this.stopButton.deactivate();
+
+                this.tweens.add({                                               // stop button out
+                    targets: this.stopButton,
+                    duration: this.tweenDuration / 2,
+                    y: gameOptions.gameHeight + this.stopButton.image.height / 2,
+                    ease: this.tweenEase
+                });
+            }
         });
 
         // move title out
         this.tweenTitleOut = this.tweens.add({
             targets: this.title,
-            duration: inDuration,
+            duration: this.tweenDuration,
             y: 0,
-            ease: inEase,
+            ease: this.tweenEase,
             paused: true
         });
 
         // move stage title out
         this.tweenStageTitleOut = this.tweens.add({
             targets: this.stageTitle,
-            duration: inDuration,
+            duration: this.tweenDuration,
             y: this.stageTitle.y + gameOptions.gameHeight,
-            ease: inEase,
+            ease: this.tweenEase,
             paused: true
         });
 
         // move total points title out
         this.tweenTotalPointsTitleOut = this.tweens.add({
             targets: this.totalPointsTitle,
-            duration: inDuration,
+            duration: this.tweenDuration,
             y: this.totalPointsTitle.y + gameOptions.gameHeight,
-            ease: inEase,
+            ease: this.tweenEase,
             paused: true
         });
 
         // move total points value out
         this.tweenTotalPointsValueOut = this.tweens.add({
             targets: this.totalPointsValue,
-            duration: inDuration,
+            duration: this.tweenDuration,
             y: this.totalPointsValue.y + gameOptions.gameHeight,
-            ease: inEase,
+            ease: this.tweenEase,
             paused: true
         });
 
+        // move menu button out
+        this.tweenMenuButtonOut = this.tweens.add({
+            targets: this.menuButton,
+            duration: this.tweenDuration / 2,
+            y: gameOptions.gameHeight + this.menuButton.image.height,
+            ease: this.tweenEase,
+            paused: true,
+            onStart: () => {
+
+                // deactivate button
+                this.menuButton.deactivate();
+            }
+        });
+
+        // move title out
+        this.tweenFinalTitleOut = this.tweens.add({
+            targets: this.finalPointsTitle,
+            duration: this.tweenDuration,
+            y: 0,
+            ease: this.tweenEase,
+            paused: true
+        });
+
+        // move total points value out (a bit slower)
+        this.tweenTotalPointsValueOutSlow = this.tweens.add({
+            targets: this.totalPointsValue,
+            duration: this.tweenDuration,
+            y: gameOptions.gameHeight,
+            ease: this.tweenEase,
+            paused: true
+        });
 
     }
-
 }

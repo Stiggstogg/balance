@@ -89,11 +89,6 @@ class GameManager {
         this.sceneSequenceLife.push(this.scenesLife[scenesIndexLife[1]]);
         this.sceneSequenceLife.push(this.scenesLife[scenesIndexLife[0]]);
 
-        // TODO: Remove this part, only for testing
-        for (let i = 0; i < this.sceneSequenceWork.length; i++) {
-            console.log(this.sceneSequenceWork[i] + '                    ' + this.sceneSequenceLife[i]);
-        }
-
     }
 
     // get next work scene

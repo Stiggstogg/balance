@@ -149,7 +149,6 @@ export default class LoadingScene extends Scene
         //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
         this.scene.start('Background');
         this.scene.launch('Menu');
-
         //this.scene.start('Points'); // TODO: Just for testing to skip the menu
     }
 
