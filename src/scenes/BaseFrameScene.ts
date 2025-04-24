@@ -1,9 +1,10 @@
-import {GameObjects, Scene, Tweens, Types} from 'phaser';
+import {GameObjects, Scene, Tweens, Types, Sound} from 'phaser';
 import gameOptions from '../helper/gameOptions.ts';
 import {ButtonId, GameState, Side} from '../helper/enums.ts';
 import UIButton from '../sprites/UIButton.ts';
 import {ResultFunction} from '../helper/interfaces.ts';
 import gameManager from '../helper/GameManager.ts';
+import WebAudioSound = Phaser.Sound.WebAudioSound;
 
 // Basic frame scene class with the frame and common elements
 export default class BaseFrameScene extends Scene
@@ -32,6 +33,10 @@ export default class BaseFrameScene extends Scene
     private tweenCountdown: Tweens.Tween;
     protected progress: number = 0;           // progress made during the game
     private progressText: GameObjects.Text;          // progress text (shows on the top right (work) or top left (life) the progress made
+    private countdownLowSound: Sound.WebAudioSound;
+    private countdownHighSound: Sound.WebAudioSound;
+    protected correctSound: Sound.WebAudioSound;
+    protected errorSound: Sound.WebAudioSound;
 
     constructor(side: Side, titleString: string, descriptionString: string, config?: string | Types.Scenes.SettingsConfig)
     {
@@ -125,8 +130,18 @@ export default class BaseFrameScene extends Scene
         // set progress text position
         this.progressText.setPosition(progressTextX, 25);
 
-        // countdown number
+        // countdown number and sounds
         this.countdown = this.add.text(this.xIn + this.sideFactor * this.frameBack.width / 2, gameOptions.gameHeight / 2, '3', gameOptions.titleTextStyle).setOrigin(0.5).setDepth(1.5).setScale(0);    // TODO: Change back to 3, this is only for faster testing
+        this.countdownLowSound = this.sound.add('countdown-low') as WebAudioSound;
+        this.countdownHighSound = this.sound.add('countdown-high') as WebAudioSound;
+        this.countdownLowSound.setVolume(0.3);
+        this.countdownHighSound.setVolume(0.3);
+
+        // add other sounds
+        this.correctSound = this.sound.add('correct') as WebAudioSound;
+        this.errorSound = this.sound.add('error') as WebAudioSound;
+        this.correctSound.setVolume(0.5);
+        this.errorSound.setVolume(0.5);
 
         // add tweens (and play the first one)
         this.addTweens();
@@ -261,6 +276,23 @@ export default class BaseFrameScene extends Scene
             scale: 1,
             ease: 'Cubic.Out',
             paused: false,
+            onStart: () => {
+
+                // get number
+                const countNumber: number = Number(this.countdown.text);
+
+                if (!isNaN(countNumber)) {
+
+                    this.countdownLowSound.play();
+
+                }
+                else {
+
+                    this.countdownHighSound.play();
+
+                }
+
+            },
             onComplete: () => {
 
                 // get number
@@ -269,8 +301,7 @@ export default class BaseFrameScene extends Scene
                 if (!isNaN(countNumber)) {
 
                     if (countNumber === 1) {
-                        // set new number
-                        this.countdown.setText('GO!')
+                        this.countdown.setText('GO!');
                     }
                     else {
                         this.countdown.setText((countNumber - 1).toString());

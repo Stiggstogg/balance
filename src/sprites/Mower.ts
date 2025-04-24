@@ -1,4 +1,4 @@
-import { Physics } from 'phaser';
+import { Physics, Sound } from 'phaser';
 import gameOptions from "../helper/gameOptions.ts";
 
 // Mower class
@@ -13,6 +13,7 @@ export default class Mower extends Physics.Arcade.Sprite {
     private startMowed: {x: number, y: number};          // start position where the grass was mowed (resets after each turn)
     private currentMowed: {x: number, y: number};        // current position where the grass was mowed
     private started: boolean = false;        // true if the mower has started mowing, false if not
+    private mowerSound: Sound.WebAudioSound;    // sound of the mower
 
     // Constructor
     constructor(scene: Phaser.Scene, x: number, y: number) {
@@ -41,6 +42,9 @@ export default class Mower extends Physics.Arcade.Sprite {
         this.currentMowedOffset = {x: this.mowerDimensions.width / 2, y: 0};
         this.startMowed = {x: this.x - this.currentMowedOffset.x, y: this.y - this.currentMowedOffset.y};
         this.currentMowed = {x: this.x + this.currentMowedOffset.x, y: this.y + this.currentMowedOffset.y};
+
+        // initialize the mower sound
+        this.mowerSound = this.scene.sound.add('mower') as Sound.WebAudioSound;
 
     }
 
@@ -74,8 +78,10 @@ export default class Mower extends Physics.Arcade.Sprite {
             // check if the player is blocked and stop the animation or play the animation
             if (this.body!.blocked.none) {
                 this.anims.play('mower-walk', true);
+                this.mowerSound.setDetune(0);
             } else {
                 this.anims.stop();
+                this.mowerSound.setDetune(-500);
             }
 
         }
@@ -144,12 +150,14 @@ export default class Mower extends Physics.Arcade.Sprite {
     // start the mower
     startMower() {
         this.started = true;
+        this.mowerSound.play({loop: true, volume: 0.3});
     }
 
     // stop the mower
     stopMower() {
         this.started = false;
         this.setVelocity(0, 0);
+        this.mowerSound.stop();
     }
 
 

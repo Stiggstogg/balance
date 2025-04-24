@@ -13,6 +13,7 @@
         "patch": "npm version --no-git-tag-version patch"
     },
     "devDependencies": {
+        "@types/node": "^22.14.1",
         "terser": "^5.39.0",
         "typescript": "^5.8.3",
         "vite": "^6.2.6"

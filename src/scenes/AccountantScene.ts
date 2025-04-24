@@ -1,4 +1,4 @@
-import {GameObjects, Types, Utils} from 'phaser';
+import {GameObjects, Types, Utils, } from 'phaser';
 import {Math as Mathphaser} from 'phaser';
 import gameOptions from "../helper/gameOptions.ts";
 import {ButtonId, GameState, Side} from "../helper/enums.ts";
@@ -271,9 +271,11 @@ export default class AccountantScene extends BaseFrameScene
         if (value === this.total) {
             this.setProgress(this.progress + 1);
             this.validation.setFrame(1);
+            this.correctSound.play();
 
         } else {
             this.validation.setFrame(0);
+            this.errorSound.play();
         }
 
         this.validation.setVisible(true);

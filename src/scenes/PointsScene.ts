@@ -1,4 +1,4 @@
-import {GameObjects, Scene, Tweens} from 'phaser';
+import {GameObjects, Scene, Tweens, Sound} from 'phaser';
 import gameOptions from "../helper/gameOptions.ts";
 import UIButton from "../sprites/UIButton.ts";
 import {ButtonId} from "../helper/enums.ts";
@@ -29,9 +29,7 @@ export default class PointsScene extends Scene
 
     private tweenDuration: number;
     private tweenEase: string;
-    private tweenStagePoints: Tweens.TweenChain;
     private tweenTotalPoints: Tweens.TweenChain;
-    private tweenContinue: Tweens.TweenChain;
     private tweenFinalPoints: Tweens.TweenChain;
     private tweenContinueStopButtonOut: Tweens.Tween;
     private tweenTitleOut: Tweens.Tween;
@@ -46,6 +44,9 @@ export default class PointsScene extends Scene
     private continueButton: UIButton;
     private stopButton: UIButton;
     private menuButton: UIButton;
+
+    private pointsSound: Sound.WebAudioSound;
+    private totalPointsSound: Sound.WebAudioSound;
 
     constructor()
     {
@@ -106,6 +107,10 @@ export default class PointsScene extends Scene
         this.menuButton = this.add.existing(new UIButton(this, gameOptions.gameWidth / 2, 0, 'Menu', ButtonId.MENU));
         this.menuButton.setY(gameOptions.gameHeight + this.menuButton.image.height/2);
         this.menuButton.deactivate();
+
+        // sounds
+        this.pointsSound = this.sound.add('points') as Sound.WebAudioSound;
+        this.totalPointsSound = this.sound.add('total-points') as Sound.WebAudioSound;
 
         // Button to go to the total point calculation
         this.events.once('click' + ButtonId.TOTAL, () => {
@@ -174,6 +179,24 @@ export default class PointsScene extends Scene
 
         });
 
+        // Change to menu scene when button is clicked
+        this.events.once('click' + ButtonId.STOP, () => {
+
+            // move buttons out
+            this.tweenContinueStopButtonOut.play();
+
+            // move titles and total points out
+            this.tweenTitleOut.play();
+            this.tweenStageTitleOut.play();
+            this.tweenTotalPointsTitleOut.play();
+            this.tweenTotalPointsValueOut.play();
+
+            this.tweenTitleOut.once('complete', () => {
+                this.scene.start('Menu');
+            });
+
+        });
+
         // Change to menu scene when the menu button is clicked
         this.events.once('click' + ButtonId.MENU, () => {
 
@@ -204,7 +227,7 @@ export default class PointsScene extends Scene
     // add and play the stage point tween
     playStagePointsTween() {
 
-        this.tweenStagePoints = this.tweens.chain({
+        this.tweens.chain({
             tweens: [
                 {
                     targets: this.title,                                    // 1. move title in
@@ -257,8 +280,12 @@ export default class PointsScene extends Scene
                     ease: this.tweenEase,
                     yoyo: true,
                     onStart: () => {
+
                         // show the work progress value
                         this.workProgressValue.setVisible(true);
+
+                        // play the points sound
+                        this.pointsSound.play();
                     },
                 },
                 {
@@ -271,6 +298,9 @@ export default class PointsScene extends Scene
                     onStart: () => {
                         // show the work progress value
                         this.workMultiplierValue.setVisible(true);
+
+                        // play the points sound
+                        this.pointsSound.play();
                     },
                 },
                 {
@@ -283,6 +313,9 @@ export default class PointsScene extends Scene
                     onStart: () => {
                         // show the work progress value
                         this.lifeProgressValue.setVisible(true);
+
+                        // play the points sound
+                        this.pointsSound.play();
                     },
                 },
                 {                                                               // 7. move life points value in
@@ -295,6 +328,9 @@ export default class PointsScene extends Scene
                     onStart: () => {
                         // show the work progress value
                         this.lifePointsValue.setVisible(true);
+
+                        // play the points sound
+                        this.pointsSound.play();
                     },
                 },
                 {                                                               // 8. move total button in
@@ -384,6 +420,9 @@ export default class PointsScene extends Scene
                     ease: this.tweenEase,
                     onComplete: () => {
 
+                        // play the points sound
+                        this.pointsSound.play();
+
                         // hide the work multiplier value
                         this.workMultiplierValue.setVisible(false);
 
@@ -426,6 +465,9 @@ export default class PointsScene extends Scene
                     scaleY: 1.3,
                     ease: this.tweenEase,
                     yoyo: true,
+                    onStart: () => {
+                        this.totalPointsSound.play();
+                    },
                     onComplete: () => {
 
                         // calculate the new total points

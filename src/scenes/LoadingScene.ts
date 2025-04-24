@@ -39,6 +39,14 @@ import NunitoFont from '../assets/fonts/Nunito-VariableFont_wght.ttf';
 import SpecialEliteFont from '../assets/fonts/SpecialElite-Regular.ttf';
 
 // audio
+import clickSound from '../assets/audio/click.mp3';
+import correctSound from '../assets/audio/correct.mp3';
+import errorSound from '../assets/audio/error.mp3';
+import countdownHighSound from '../assets/audio/countdown-high.wav';
+import countdownLowSound from '../assets/audio/countdown-low.wav';
+import mowerSound from '../assets/audio/mower.mp3';
+import pointsSound from '../assets/audio/points.mp3';
+import totalPointsSound from '../assets/audio/total-points.mp3';
 
 // json
 import wordsJson from '../assets/json/words.json';
@@ -127,7 +135,14 @@ export default class LoadingScene extends Scene
         this.load.spritesheet('dance-validation', danceValidationImg, {frameWidth: 64, frameHeight: 64, margin: 1, spacing: 1});
 
         // load audio
-        //this.load.audio('miss', 'assets/audio/Pew.mp3');
+        this.load.audio('click', clickSound);
+        this.load.audio('correct', correctSound);
+        this.load.audio('error', errorSound);
+        this.load.audio('countdown-high', countdownHighSound);
+        this.load.audio('countdown-low', countdownLowSound);
+        this.load.audio('mower', mowerSound);
+        this.load.audio('points', pointsSound);
+        this.load.audio('total-points', totalPointsSound);
 
         // fonts
         this.load.font('Luckiest Guy', LuckiestGuyFont, 'truetype');

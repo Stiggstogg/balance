@@ -52,7 +52,7 @@ class GameOptions {
         this.gameHeight = 488;
 
         // time limit for each mini game
-        this.timeLimit = 60; // seconds      TODO: Set back to 60. This is only for testing purposes
+        this.timeLimit = 3; // seconds      TODO: Set back to 60. This is only for testing purposes
 
         // tween lengths
         this.frameTweenLength = 1000; // milliseconds

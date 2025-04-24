@@ -210,6 +210,9 @@ export default class EditorScene extends BaseFrameScene
 
         if (!pressedButton.correct) {        // if the pressed button is the one with the wrong word (correct choice)
 
+            // play the sound
+            this.correctSound.play();
+
             // set the correct validation sign
             this.validation.setFrame(1);            // set the validation sign to correct
 
@@ -218,6 +221,9 @@ export default class EditorScene extends BaseFrameScene
 
         }
         else {
+
+            // play the sound
+            this.errorSound.play();
 
             // set the wrong validation sign
             this.validation.setFrame(0);            // set the validation sign to wrong

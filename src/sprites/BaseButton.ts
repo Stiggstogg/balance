@@ -29,6 +29,7 @@ export default class BaseButton extends GameObjects.Container {
         this.setInteractive();
         this.on('pointerdown', () => {
             this.click();
+            this.scene.sound.play('click');
         });
     }
 
