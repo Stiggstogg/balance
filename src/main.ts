@@ -32,7 +32,11 @@ const config: Types.Core.GameConfig = {
     pixelArt: false,
     scale: {
         mode: Phaser.Scale.FIT,
-        autoCenter: Phaser.Scale.CENTER_BOTH
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+        max: {
+            width: gameOptions.gameWidth * 1.5,
+            height: gameOptions.gameHeight * 1.5
+        }
     },
     physics: {
         default: 'arcade',
