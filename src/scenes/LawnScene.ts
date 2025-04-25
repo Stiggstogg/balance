@@ -18,6 +18,7 @@ export default class LawnScene extends BaseFrameScene
     private mower: Mower;
     private mowerLine: GameObjects.Line;
     private houseCollider: GameObjects.Zone;
+    private edgeCollider: GameObjects.Zone;
     private buttonClockwise: LawnButton;
     private buttonCounterClockwise: LawnButton;
     private unmowedColor: Display.Color;
@@ -25,7 +26,7 @@ export default class LawnScene extends BaseFrameScene
     private totalPixels: number;
     private mowedPixels: number;
 
-    constructor(config?: string | Types.Scenes.SettingsConfig)
+    constructor()
     {
         super(Side.LIFE, 'Lawn Mowing', 'Time to tidy up the turf!\nRotate your mower left or right to cut every patch.', 'Lawn');
 
@@ -47,8 +48,10 @@ export default class LawnScene extends BaseFrameScene
         this.background = this.add.image(0, 0, 'lawn-background').setOrigin(1,0).setDepth(1.1);
         this.pool = this.physics.add.staticImage(0, 0, 'lawn-pool').setOrigin(1,0).setDepth(1.1);
         this.sand = this.physics.add.staticImage(0, 0, 'lawn-sand').setOrigin(1,0).setDepth(1.1);
-        this.houseCollider = this.add.zone(548, 128, 142, 225).setOrigin(0);
+        this.houseCollider = this.add.zone(547, 128, 142, 225).setOrigin(0);
+        this.edgeCollider = this.add.zone(547, 36, 77, 37).setOrigin(0);        // this is the collider for the edge of the lawn (to prevent mowing below the progress number)
         this.physics.add.existing(this.houseCollider, true);        // add the house collider to the physics system
+        this.physics.add.existing(this.edgeCollider, true);        // add the edge collider to the physics system
 
         // get the total number of unmowed grass pixels in the lawn texture
         this.lawn.snapshot((image: HTMLImageElement | any) => {
@@ -56,7 +59,7 @@ export default class LawnScene extends BaseFrameScene
         });
 
         // create a random start position for the mower
-        const startArea = {x: 690, y: 128, width: 0, height: 225};
+        const startArea = {x: 699, y: 128, width: 0, height: 215};
         const mowerStart = {x: startArea.x + Mathphaser.RND.integerInRange(0, startArea.width), y: startArea.y + Mathphaser.RND.integerInRange(0, startArea.height)};        // start position of the mower
 
         // create mower and st
@@ -64,11 +67,12 @@ export default class LawnScene extends BaseFrameScene
         this.mowerLine = this.add.line(0, 0, this.mower.getStartMowed().x, this.mower.getStartMowed().y, this.mower.getCurrentMowed().x, this.mower.getCurrentMowed().y, this.mowedColor.color).setLineWidth(20).setOrigin(0).setVisible(false).setDepth(1);
 
         // add colliders
-        this.physics.world.setBounds(548, 36, 440, 317);        // set the world bounds to the size of the lawn
+        this.physics.world.setBounds(547, 36, 442, 318);        // set the world bounds to the size of the lawn
         this.mower.setCollideWorldBounds(true);                 // set the mower to collide with the world bounds
         this.physics.add.collider(this.mower, this.pool);
         this.physics.add.collider(this.mower, this.sand);
         this.physics.add.collider(this.mower, this.houseCollider);
+        this.physics.add.collider(this.mower, this.edgeCollider);
 
         // add buttons
         const buttonDistance = 200;
@@ -99,7 +103,7 @@ export default class LawnScene extends BaseFrameScene
 
         });
 
-        // event listeners for game state events (start, stop)
+        // event listeners for game start event
         this.events.once('startGame', () => {               // game start
 
             // move the body of the pool and sandbox to their current position (after they slided in)

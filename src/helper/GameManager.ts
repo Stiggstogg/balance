@@ -125,16 +125,12 @@ class GameManager {
         this.progressWork = progress;
         this.multiplier = multiplier;
 
-        console.log('Work:\nProgress: ' + this.progressWork + '\nMultiplier: ' + this.multiplier);      // TODO: Remove at the end. Just for testing
-
     }
 
     // set the progress and points of the latest life scene
     public setLifeProgressPoints(progress: number, points: number): void {
         this.progressLife = progress;
         this.points = points;
-
-        console.log('Life:\nProgress: ' + this.progressLife + '\nPoints: ' + this.points);              // TODO: Remove at the end. Just for testing
     }
 
     // get the progress of the latest work scene
@@ -196,6 +192,14 @@ class GameManager {
             }
         }
         return ''
+    }
+
+    // set the first two scenes TODO: This is only for testing. Remove it at the end
+    public setScenes(work: string, life: string): void {
+
+        this.sceneSequenceWork[0] = work;
+        this.sceneSequenceLife[0] = life;
+
     }
 
 }

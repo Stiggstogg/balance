@@ -1,8 +1,9 @@
-import {GameObjects, Scene, Tweens, Sound} from 'phaser';
+import {GameObjects, Scene, Tweens} from 'phaser';
 import gameOptions from "../helper/gameOptions.ts";
 import UIButton from "../sprites/UIButton.ts";
 import {ButtonId} from "../helper/enums.ts";
 import gameManager from '../helper/GameManager.ts';
+import SoundManager from '../helper/SoundManager.ts';
 
 export default class PointsScene extends Scene
 {
@@ -45,8 +46,7 @@ export default class PointsScene extends Scene
     private stopButton: UIButton;
     private menuButton: UIButton;
 
-    private pointsSound: Sound.WebAudioSound;
-    private totalPointsSound: Sound.WebAudioSound;
+    private soundManager: SoundManager;
 
     constructor()
     {
@@ -108,9 +108,14 @@ export default class PointsScene extends Scene
         this.menuButton.setY(gameOptions.gameHeight + this.menuButton.image.height/2);
         this.menuButton.deactivate();
 
-        // sounds
-        this.pointsSound = this.sound.add('points') as Sound.WebAudioSound;
-        this.totalPointsSound = this.sound.add('total-points') as Sound.WebAudioSound;
+        // start the points song
+        this.soundManager = SoundManager.getInstance(this);                               // get the sound manager
+
+        // play the points song
+        this.soundManager.pointsSong.play({volume: gameOptions.pointsSongVolume});
+
+        // stop the play song, but should anyway be already faded out
+        this.soundManager.playSong.stop();
 
         // Button to go to the total point calculation
         this.events.once('click' + ButtonId.TOTAL, () => {
@@ -182,6 +187,9 @@ export default class PointsScene extends Scene
         // Change to menu scene when button is clicked
         this.events.once('click' + ButtonId.STOP, () => {
 
+            // fade out the points song
+            this.soundManager.fadeOut(this, 'points-song');
+
             // move buttons out
             this.tweenContinueStopButtonOut.play();
 
@@ -199,6 +207,9 @@ export default class PointsScene extends Scene
 
         // Change to menu scene when the menu button is clicked
         this.events.once('click' + ButtonId.MENU, () => {
+
+            // fade out the points song
+            this.soundManager.fadeOut(this, 'points-song');
 
             // move buttons out
             this.tweenMenuButtonOut.play();
@@ -285,7 +296,7 @@ export default class PointsScene extends Scene
                         this.workProgressValue.setVisible(true);
 
                         // play the points sound
-                        this.pointsSound.play();
+                        this.soundManager.pointsSound.play();
                     },
                 },
                 {
@@ -300,7 +311,7 @@ export default class PointsScene extends Scene
                         this.workMultiplierValue.setVisible(true);
 
                         // play the points sound
-                        this.pointsSound.play();
+                        this.soundManager.pointsSound.play();
                     },
                 },
                 {
@@ -315,7 +326,7 @@ export default class PointsScene extends Scene
                         this.lifeProgressValue.setVisible(true);
 
                         // play the points sound
-                        this.pointsSound.play();
+                        this.soundManager.pointsSound.play();
                     },
                 },
                 {                                                               // 7. move life points value in
@@ -330,7 +341,7 @@ export default class PointsScene extends Scene
                         this.lifePointsValue.setVisible(true);
 
                         // play the points sound
-                        this.pointsSound.play();
+                        this.soundManager.pointsSound.play();
                     },
                 },
                 {                                                               // 8. move total button in
@@ -421,7 +432,7 @@ export default class PointsScene extends Scene
                     onComplete: () => {
 
                         // play the points sound
-                        this.pointsSound.play();
+                        this.soundManager.pointsSound.play();
 
                         // hide the work multiplier value
                         this.workMultiplierValue.setVisible(false);
@@ -466,7 +477,7 @@ export default class PointsScene extends Scene
                     ease: this.tweenEase,
                     yoyo: true,
                     onStart: () => {
-                        this.totalPointsSound.play();
+                        this.soundManager.totalPointsSound.play();
                     },
                     onComplete: () => {
 

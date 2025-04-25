@@ -1,4 +1,4 @@
-import {GameObjects, Types, Utils} from 'phaser';
+import {GameObjects, Utils} from 'phaser';
 import {Math as Mathphaser} from 'phaser';
 import gameOptions from "../helper/gameOptions.ts";
 import {ButtonId, GameState, Side} from "../helper/enums.ts";
@@ -21,7 +21,7 @@ export default class EditorScene extends BaseFrameScene
     private selectionFrame: GameObjects.Image;
     private wrongWordLine: GameObjects.Image;
 
-    constructor(config?: string | Types.Scenes.SettingsConfig)
+    constructor()
     {
         super(Side.WORK, 'Editor', 'Sharpen your red pen!\nFind the word with the typo.', 'Editor');
     }
@@ -211,7 +211,7 @@ export default class EditorScene extends BaseFrameScene
         if (!pressedButton.correct) {        // if the pressed button is the one with the wrong word (correct choice)
 
             // play the sound
-            this.correctSound.play();
+            this.soundManager.correctSound.play();
 
             // set the correct validation sign
             this.validation.setFrame(1);            // set the validation sign to correct
@@ -223,7 +223,7 @@ export default class EditorScene extends BaseFrameScene
         else {
 
             // play the sound
-            this.errorSound.play();
+            this.soundManager.errorSound.play();
 
             // set the wrong validation sign
             this.validation.setFrame(0);            // set the validation sign to wrong

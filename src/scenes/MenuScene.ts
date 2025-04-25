@@ -3,6 +3,7 @@ import gameOptions from "../helper/gameOptions.ts";
 import UIButton from "../sprites/UIButton.ts";
 import {ButtonId} from "../helper/enums.ts";
 import gameManager from '../helper/GameManager.ts';
+import SoundManager from '../helper/SoundManager.ts';
 
 export default class MenuScene extends Scene
 {
@@ -44,6 +45,16 @@ export default class MenuScene extends Scene
         // button
         this.button = this.add.existing(new UIButton(this, this.middle, gameOptions.gameHeight + this.buttonDistanceY, 'Play', ButtonId.PLAY));
         this.button.deactivate();
+
+        // add and play menu song
+        const soundManager =  SoundManager.getInstance(this);                                    // get the sound manager
+
+        if (!soundManager.menuSong.isPlaying) {                                                 // play the menu song if it is not playing yet
+            soundManager.menuSong.play({volume: gameOptions.menuSongVolume});                   // gameOptions.menuSongVolume);
+        }
+
+        // stop the points song (however, should not be playing anyway)
+        soundManager.pointsSong.stop();
 
         // add tweens
         this.addTweens();

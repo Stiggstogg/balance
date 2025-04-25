@@ -78,8 +78,4 @@ export default class GameScene extends Scene
 
     }
 
-    // Add keyboard input to the scene.
-    addKeys(): void {
-
-    }
 }

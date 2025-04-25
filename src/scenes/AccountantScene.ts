@@ -1,4 +1,4 @@
-import {GameObjects, Types, Utils, } from 'phaser';
+import {GameObjects, Utils, } from 'phaser';
 import {Math as Mathphaser} from 'phaser';
 import gameOptions from "../helper/gameOptions.ts";
 import {ButtonId, GameState, Side} from "../helper/enums.ts";
@@ -28,7 +28,7 @@ export default class AccountantScene extends BaseFrameScene
     private accountantButton4: UIButton;
     private buttonGroup: GameObjects.Group;
 
-    constructor(config?: string | Types.Scenes.SettingsConfig)
+    constructor()
     {
         super(Side.WORK, 'Accountant', 'Ready to crunch numbers?\nTotal the assets to complete the 2025 balance sheets.', 'Accountant');
     }
@@ -93,11 +93,6 @@ export default class AccountantScene extends BaseFrameScene
             // make texts visible
             this.textGroup.setVisible(true);
 
-            // typewrite texts (except the first one)
-            for (let i = 1; i < this.textGroup.getChildren().length; ++i) {
-                this.typewriteText(this.textGroup.getChildren()[i] as GameObjects.Text);
-            }
-
             // show numbers
             this.newNumbers();
 
@@ -142,35 +137,6 @@ export default class AccountantScene extends BaseFrameScene
 
     }
 
-    // typewrite text
-    typewriteText(textObject: GameObjects.Text, newValue?: string | number)
-    {
-
-        let textString = textObject.text;      // get the current text
-
-        if (typeof newValue === 'string') {
-            textString = newValue;        // get string as provided
-        }
-        else if (typeof newValue === 'number') {
-            textString = this.toMoneyString(newValue);    // convert string
-        }
-
-        // clear text
-        textObject.setText('');
-
-        const length = textString.length;
-        let i = 0;
-
-        this.time.addEvent({
-            callback: () => {
-                textObject.text += textString[i];
-                ++i
-            },
-            repeat: length - 1,
-            delay: 20
-        });
-    }
-
     // convert a number to a money string (e.g. 1000 -> '1,000 $')
     toMoneyString(num: number): string
     {
@@ -183,9 +149,10 @@ export default class AccountantScene extends BaseFrameScene
         if (this.gameState === GameState.PLAYING) {
 
             // set numbers for cash and inventory
-            this.cash = Mathphaser.RND.integerInRange(gameOptions.accountantRange.min, gameOptions.accountantRange.max);
-            this.inventory = Mathphaser.RND.integerInRange(gameOptions.accountantRange.min, gameOptions.accountantRange.max);
+            this.cash = Mathphaser.RND.integerInRange(gameOptions.accountantRange.min, gameOptions.accountantRange.max) * gameOptions.accountantFactor;
+            this.inventory = Mathphaser.RND.integerInRange(gameOptions.accountantRange.min, gameOptions.accountantRange.max) * gameOptions.accountantFactor;
             this.total = this.cash + this.inventory;
+            const totalWithoutFactor = this.total / gameOptions.accountantFactor;       // calculate the total without the factor (to generate wrong results)
 
             // set text and make it visible
             this.cashText.setText(this.toMoneyString(this.cash));
@@ -193,36 +160,31 @@ export default class AccountantScene extends BaseFrameScene
             this.totalText.setText('???? $');
             this.numberGroup.setVisible(true);       // make all numbers visible
 
-            // typewrite numbers
-            for (let i = 0; i < this.numberGroup.getChildren().length; ++i) {
-                this.typewriteText(this.numberGroup.getChildren()[i] as GameObjects.Text);
-            }
-
             // define answers for the buttons and make buttons visible
             let results = [];
             results.push(this.total);        // add the correct answer
 
             if (Mathphaser.RND.frac() <= gameOptions.accountantTenthProb) {        // check if by chance a wrong value with exactly +/- 10 is generated
-                results.push(this.total + Mathphaser.RND.pick([-1, 1]) * 10);
+                results.push((totalWithoutFactor + Mathphaser.RND.pick([-1, 1]) * 10) * gameOptions.accountantFactor);
             }
 
             if (Mathphaser.RND.frac() <= gameOptions.accountantTwenthyProb) {        // check if by chance a wrong value with exactly +/- 20 is generated
-                results.push(this.total + Mathphaser.RND.pick([-1, 1]) * 20);
+                results.push((totalWithoutFactor + Mathphaser.RND.pick([-1, 1]) * 20) * gameOptions.accountantFactor);
             }
 
-            if (Mathphaser.RND.frac() <= gameOptions.accountantNumberSwitchProb) {        // check if by chance a number switch on the last two digits should be done
+            if (Mathphaser.RND.frac() <= gameOptions.accountantNumberSwitchProb && totalWithoutFactor % 10 !== 0) {        // check if by chance a number switch on the last two digits should be done, but only if the last digit is not 0
 
-                const lastDigit = this.total % 10;
-                const secondLastDigit = Math.floor((this.total % 100) / 10);
-                const remaining = Math.floor(this.total / 100);
+                const lastDigit = totalWithoutFactor % 10;
+                const secondLastDigit = Math.floor((totalWithoutFactor % 100) / 10);
+                const remaining = Math.floor(totalWithoutFactor / 100);
 
-                results.push(remaining * 100 + lastDigit * 10 + secondLastDigit);
+                results.push((remaining * 100 + lastDigit * 10 + secondLastDigit) * gameOptions.accountantFactor);        // switch the last two digits and multiply with the factor
 
             }
 
             for (let i = results.length; i < 4; i++) {          // fill up the remaining buttons with random values
 
-                results.push(this.total + Mathphaser.RND.pick([-1, 1]) * Mathphaser.RND.integerInRange(gameOptions.accountantDeviation.min, gameOptions.accountantDeviation.max));
+                results.push((totalWithoutFactor + Mathphaser.RND.pick([-1, 1]) * Mathphaser.RND.integerInRange(gameOptions.accountantDeviation.min, gameOptions.accountantDeviation.max)) * gameOptions.accountantFactor);
 
             }
 
@@ -237,7 +199,7 @@ export default class AccountantScene extends BaseFrameScene
 
                         if (results[i] === results[j]) {
                             duplicates = true;
-                            results[j] = this.total + Mathphaser.RND.pick([-1, 1]) * Mathphaser.RND.integerInRange(gameOptions.accountantDeviation.min, gameOptions.accountantDeviation.max);
+                            results[j] = (totalWithoutFactor + Mathphaser.RND.pick([-1, 1]) * Mathphaser.RND.integerInRange(gameOptions.accountantDeviation.min, gameOptions.accountantDeviation.max)) * gameOptions.accountantFactor;
                         }
                     }
                 }
@@ -265,17 +227,17 @@ export default class AccountantScene extends BaseFrameScene
     handleButtonClick(value: number) {
 
         // write button value to the total text
-        this.typewriteText(this.totalText, value);
+        this.totalText.setText(this.toMoneyString(this.cash));
 
         // check if the button value is correct
         if (value === this.total) {
             this.setProgress(this.progress + 1);
             this.validation.setFrame(1);
-            this.correctSound.play();
+            this.soundManager.correctSound.play();
 
         } else {
             this.validation.setFrame(0);
-            this.errorSound.play();
+            this.soundManager.errorSound.play();
         }
 
         this.validation.setVisible(true);

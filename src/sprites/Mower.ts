@@ -1,5 +1,4 @@
 import { Physics, Sound } from 'phaser';
-import gameOptions from "../helper/gameOptions.ts";
 
 // Mower class
 export default class Mower extends Physics.Arcade.Sprite {
@@ -51,8 +50,6 @@ export default class Mower extends Physics.Arcade.Sprite {
     // update
     update() {
         super.update();
-
-        this.currentMowedOffset = {x: 0, y: 0};    // this defines the offset of the mowed position from the mower position // TODO: Remove, I think this is not needed
 
         if (this.started) {
 

@@ -1,4 +1,4 @@
-import {GameObjects, Scene, Sound} from 'phaser';
+import {GameObjects, Scene} from 'phaser';
 import gameOptions from "../helper/gameOptions.ts";
 
 // Basic scene class with the background which is used to extend the other scenes
@@ -8,7 +8,6 @@ export default class BackgroundScene extends Scene
     private cloud2Pos: { x: number, y: number };
     private cloud1: GameObjects.Image;
     private cloud2: GameObjects.Image;
-    private menuSong: Sound.WebAudioSound;
 
     constructor()
     {
@@ -31,12 +30,6 @@ export default class BackgroundScene extends Scene
         // clouds
         this.cloud1 = this.add.image(this.cloud1Pos.x, this.cloud1Pos.y,'cloud1').setOrigin(0);
         this.cloud2 = this.add.image(this.cloud2Pos.x, this.cloud2Pos.y,'cloud2').setOrigin(0);
-
-        // add menu song
-        this.menuSong = this.sound.add('menu-song') as Sound.WebAudioSound;
-        this.menuSong.setLoop(true);
-        this.menuSong.setVolume(0.75);
-        this.menuSong.play();
 
     }
 

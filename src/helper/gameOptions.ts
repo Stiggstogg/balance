@@ -10,11 +10,24 @@ class GameOptions {
     public readonly gameTitle: string;
     public readonly gameWidth: number;                                  // game width
     public readonly gameHeight: number;                                 // game height
+    public readonly countDownTime: number;                             // time for the countdown in seconds
     public readonly timeLimit: number;                                  // time limit for each mini game
     public readonly frameTweenLength: number;                           // tween length for the frame to appear and disappear
     public readonly cloudSpeedDifference: number;                       // relative difference in speed between the two clouds
     public readonly cloudSpeed: number;                                 // speed of the clouds
+    public readonly menuSongVolume: number;                              // volume of the menu song
+    public readonly playSongVolume: number;                              // volume of the play song
+    public readonly pointsSongVolume: number;                            // volume of the points song
+    public readonly clickSoundVolume: number;                            // volume of the click sound
+    public readonly correctSoundVolume: number;                          // volume of the correct sound
+    public readonly errorSoundVolume: number;                            // volume of the error sound
+    public readonly countdownHighSoundVolume: number;                    // volume of the countdown high sound
+    public readonly countdownLowSoundVolume: number;                     // volume of the countdown low sound
+    public readonly mowerSoundVolume: number;                            // volume of the mower sound
+    public readonly pointsSoundVolume: number;                           // volume of the points sound
+    public readonly totalPointsSoundVolume: number;                      // volume of the total points sound
     public readonly accountantRange: { min: number; max: number };      // value range for the numbers to be added
+    public readonly accountantFactor: number;                           // factor which is used to multiply the number to make them bigger
     public readonly accountantDeviation: { min: number; max: number };  // value range for the deviation of wrong results
     public readonly accountantTenthProb: number;                        // probability of getting a wrong result with is +/- 10 so that the user can not only check the last number
     public readonly accountantTwenthyProb: number;                      // probability of getting a wrong result with is +/- 20 so that the user can not only check the last number
@@ -52,7 +65,8 @@ class GameOptions {
         this.gameHeight = 488;
 
         // time limit for each mini game
-        this.timeLimit = 3; // seconds      TODO: Set back to 60. This is only for testing purposes
+        this.countDownTime = 3;             // the time for the countdown in seconds
+        this.timeLimit = 60; // seconds      TODO: Set back to 60. This is only for testing purposes
 
         // tween lengths
         this.frameTweenLength = 1000; // milliseconds
@@ -66,19 +80,35 @@ class GameOptions {
         this.cloudSpeedDifference = 0.05;            // relative difference in speed between the two clouds
 
         // ----------------------------
+        // Music and sound volumes
+        // ----------------------------
+
+        this.menuSongVolume = 0.75;                // volume of the menu song
+        this.playSongVolume = 0.75;                // volume of the play song
+        this.pointsSongVolume = 0.75;              // volume of the points song
+        this.clickSoundVolume = 0.75;              // volume of the click sound
+        this.correctSoundVolume = 1;            // volume of the correct sound
+        this.errorSoundVolume = 1;              // volume of the error sound
+        this.countdownLowSoundVolume = 0.75;       // volume of the countdown low sound
+        this.countdownHighSoundVolume = 0.75;      // volume of the countdown high sound
+        this.mowerSoundVolume = 0.75;              // volume of the mower sound
+        this.pointsSoundVolume = 0.75;             // volume of the points sound
+        this.totalPointsSoundVolume = 1;        // volume of the total points sound
+
+        // ----------------------------
         // Game options: Accountant
         // ----------------------------
 
-        this.accountantRange = {min: 100, max: 499};    // value range for the numbers to be added
-        this.accountantDeviation = {min: 1, max: 30};   // value range for the deviation of wrong results
-        this.accountantTenthProb = 0.40;                // probability of getting a wrong result with is +/- 10 so that the user can not only check the last number
-        this.accountantTwenthyProb = 0.30;              // probability of getting a wrong result with is +/- 20 so that the user can not only check the last number
-        this.accountantNumberSwitchProb = 0.30;         // probability of getting a wrong result where the last two numbers are inverted
+        this.accountantRange = {min: 10, max: 49};      // value range for the numbers to be added
+        this.accountantFactor = 10;                     // factor which is used to multiply the number to make them bigger
+        this.accountantDeviation = {min: 1, max: 9};   // value range for the deviation of wrong results
+        this.accountantTenthProb = 0.40;                // probability of getting a wrong result with is +/- 10 so that the user can not only check the last number (applied before applying "Factor")
+        this.accountantTwenthyProb = 0.30;              // probability of getting a wrong result with is +/- 20 so that the user can not only check the last number (applied before applying "Factor")
+        this.accountantNumberSwitchProb = 0.30;         // probability of getting a wrong result where the last two numbers are inverted (applied before applying "Factor")
         this.accountantMultiplierFunction = {            // the factor which is used to calculate from the number of correct calculations (progress) to the multiplier
             slope: 0.9,
             offset: 1
         }
-
 
         // ----------------------------
         // Game options: Editor

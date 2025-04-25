@@ -1,4 +1,4 @@
-import {GameObjects, Math as Mathphaser, Types} from 'phaser';
+import {GameObjects, Math as Mathphaser} from 'phaser';
 import {ButtonId, GameState, Side} from '../helper/enums.ts';
 import BaseFrameScene from './BaseFrameScene.ts';
 import gameOptions from '../helper/gameOptions.ts';
@@ -25,7 +25,7 @@ export default class DanceScene extends BaseFrameScene
     private validation: GameObjects.Image;
     private nextPorgressUpdate: number;
 
-    constructor(config?: string | Types.Scenes.SettingsConfig)
+    constructor()
     {
         super(Side.LIFE, 'Dancing Class', 'Get ready to groove!\nFollow the teacher\'s instructions and move your hands up or down!' , 'Dance');
 

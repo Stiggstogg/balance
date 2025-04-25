@@ -42,12 +42,14 @@ import SpecialEliteFont from '../assets/fonts/SpecialElite-Regular.ttf';
 import clickSound from '../assets/audio/click.mp3';
 import correctSound from '../assets/audio/correct.mp3';
 import errorSound from '../assets/audio/error.mp3';
-import countdownHighSound from '../assets/audio/countdown-high.wav';
-import countdownLowSound from '../assets/audio/countdown-low.wav';
+import countdownHighSound from '../assets/audio/countdown-high.mp3';
+import countdownLowSound from '../assets/audio/countdown-low.mp3';
 import mowerSound from '../assets/audio/mower.mp3';
 import pointsSound from '../assets/audio/points.mp3';
 import totalPointsSound from '../assets/audio/total-points.mp3';
 import menuSongSound from '../assets/audio/menu-song.mp3';
+import playSongSound from '../assets/audio/play-song.mp3';
+import pointsSongSound from '../assets/audio/points-song.mp3';
 
 // json
 import wordsJson from '../assets/json/words.json';
@@ -145,6 +147,8 @@ export default class LoadingScene extends Scene
         this.load.audio('points', pointsSound);
         this.load.audio('total-points', totalPointsSound);
         this.load.audio('menu-song', menuSongSound);
+        this.load.audio('play-song', playSongSound);
+        this.load.audio('points-song', pointsSongSound);
 
         // fonts
         this.load.font('Luckiest Guy', LuckiestGuyFont, 'truetype');
@@ -166,7 +170,7 @@ export default class LoadingScene extends Scene
         //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
         this.scene.start('Background');
         this.scene.launch('Menu');
-        //this.scene.start('Points'); // TODO: Just for testing to skip the menu
+        //this.scene.launch('Test3'); // TODO: Just for testing to skip the menu
     }
 
     createAnimations() {
