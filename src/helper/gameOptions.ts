@@ -106,7 +106,7 @@ class GameOptions {
         this.accountantTwenthyProb = 0.30;              // probability of getting a wrong result with is +/- 20 so that the user can not only check the last number (applied before applying "Factor")
         this.accountantNumberSwitchProb = 0.30;         // probability of getting a wrong result where the last two numbers are inverted (applied before applying "Factor")
         this.accountantMultiplierFunction = {            // the factor which is used to calculate from the number of correct calculations (progress) to the multiplier
-            slope: 0.9,
+            slope: 1,
             offset: 1
         }
 
@@ -115,7 +115,7 @@ class GameOptions {
         // ----------------------------
 
         this.editorMultiplierFunction = {            // the factor which is used to calculate from the number of correctly detected typos (progress) to the multiplier
-            slope: 0.9,
+            slope: 0.81,
             offset: 1
         }
 
@@ -124,8 +124,8 @@ class GameOptions {
         // ----------------------------
 
         this.lawnPointsFunctions = [                // the functions which are used to calculate from the percentage of mowed grass to the points
-            {slope: 10, offset: 100},                 // the function which is used to calculate from the percentage of mowed grass to the points in the first segment
-            {slope: 20, offset: 0}                // the function which is used to calculate from the percentage of mowed grass to the points in the second segment
+            {slope: 5, offset: 100},                 // the function which is used to calculate from the percentage of mowed grass to the points in the first segment
+            {slope: 20, offset: -200}                // the function which is used to calculate from the percentage of mowed grass to the points in the second segment
         ];
 
         // ----------------------------
@@ -136,7 +136,7 @@ class GameOptions {
         this.danceProgressUpdateInterval = 5;                // interval in seconds for the progress to be updated
         this.dancePointsFunctions = [                     // the functions which are used to calculate from the percentage of how long your moves were correct to the points
             {slope: 1.33, offset: 100},                     // the function which is used to calculate from the percentage of how long your moves were correct to the points in the first segment
-            {slope: 32, offset: -2200}                        // the function which is used to calculate from the percentage of how long your moves were correct to the points in the second segment
+            {slope: 36.36, offset: -2527}                        // the function which is used to calculate from the percentage of how long your moves were correct to the points in the second segment
         ];
 
         // ---------------------

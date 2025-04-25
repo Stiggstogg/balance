@@ -11,16 +11,16 @@ export default class MenuScene extends Scene
     private life: GameObjects.Text;
     private dash: GameObjects.Text;
     private balance: GameObjects.Text;
+    private description: GameObjects.Text;
     private button: UIButton;
-    private tweenButtonIn: Phaser.Tweens.Tween;
     private tweenWorkOut: Phaser.Tweens.Tween;
-    private tweenLifeOut: Phaser.Tweens.Tween;
-    private tweenBalanceOut: Phaser.Tweens.Tween;
+    private tweenDescriptionOut: Phaser.Tweens.Tween;
     private tweenButtonOut: Phaser.Tweens.Tween;
     private offsetX: number;
     private startY: number;
     private middle: number;
     private buttonDistanceY: number;
+    private descriptionDistanceY: number;
 
     constructor()
     {
@@ -31,16 +31,24 @@ export default class MenuScene extends Scene
     {
 
         // parameters
-        this.offsetX = gameOptions.gameWidth * 0.03;           // x offset the upper line to center them above the "Balance" text
-        this.startY = gameOptions.gameHeight * 0.1;             // y position of the upper line ("Work - Life")
-        this.middle = gameOptions.gameWidth / 2;                // middle position of the screen
-        this.buttonDistanceY = gameOptions.gameHeight * 0.4;        // y distance between the lower line ("Balance") and the button
+        this.offsetX = gameOptions.gameWidth * 0.03;                // x offset the upper line to center them above the "Balance" text
+        this.startY = gameOptions.gameHeight * 0.05;                // y position of the upper line ("Work - Life")
+        this.middle = gameOptions.gameWidth / 2;                    // middle position of the screen
+        this.descriptionDistanceY = gameOptions.gameHeight * 0.4;   // y distance between the lower line ("Balance") and the description
+        this.buttonDistanceY = gameOptions.gameHeight * 0.35;        // y distance between the lower line ("Balance") and the button
 
         // Title
         this.work = this.add.text(0, this.startY, 'Work', gameOptions.titleTextStyle).setOrigin(1, 0);
         this.life = this.add.text(gameOptions.gameWidth, this.startY, 'Life', gameOptions.titleTextStyle).setOrigin(0, 0);
         this.dash = this.add.text(this.middle + this.offsetX, this.startY, '-', gameOptions.titleTextStyle).setOrigin(0.5, 0).setVisible(false);
         this.balance = this.add.text(this.middle, gameOptions.gameHeight, 'B a l a n c e', gameOptions.titleTextStyle).setOrigin(0.5, 0);
+
+        // description
+        this.description = this.add.text(this.middle, gameOptions.gameHeight,
+            'You juggle two jobs and a whirlwind of daily life tasks. Each day, you must tackle one work task and one life task — simultaneously!\n' +
+            'Find your balance and complete all tasks across ' + gameManager.getTotalStages().toString() + ' demanding days to maximize your score and prove you can handle it all.',
+            gameOptions.normalTextStyle).setOrigin(0.5, 0);
+        this.description.setWordWrapWidth(gameOptions.gameWidth * 0.70);        // set word wrap width
 
         // button
         this.button = this.add.existing(new UIButton(this, this.middle, gameOptions.gameHeight + this.buttonDistanceY, 'Play', ButtonId.PLAY));
@@ -69,6 +77,7 @@ export default class MenuScene extends Scene
             gameManager.newGame();
 
             // move the title and the button away
+            this.tweenDescriptionOut.play();        // play the description tween
             this.tweenButtonOut.play();             // this will also trigger the other tweens (on complete)
 
             // launch the game scene as soon as the tweens are done
@@ -110,7 +119,10 @@ export default class MenuScene extends Scene
             paused: false,
             onComplete: () => {
                 this.dash.setVisible(true);     // make dash visible
-                this.tweenButtonIn.play();        // play the button tween
+
+                // bring the description and buttons in
+                tweenDescriptionIn.play();
+                tweenButtonIn.play();        // play the button tween
             }
         });
 
@@ -130,10 +142,18 @@ export default class MenuScene extends Scene
             paused: false,
         });
 
-        this.tweenButtonIn = this.tweens.add({
+        const tweenDescriptionIn = this.tweens.add({
+            targets: this.description,
+            duration: inDuration / 2,
+            y: this.startY + this.descriptionDistanceY,
+            ease: inEase,
+            paused: true
+        });
+
+        const tweenButtonIn = this.tweens.add({
             targets: this.button,
             duration: inDuration / 2,
-            y: this.startY + distanceY + this.buttonDistanceY,
+            y: this.startY + this.descriptionDistanceY + this.buttonDistanceY,
             ease: inEase,
             paused: true,
             onComplete: () => {
@@ -159,7 +179,7 @@ export default class MenuScene extends Scene
             }
         });
 
-        this.tweenLifeOut = this.tweens.add({
+        const tweenLifeOut = this.tweens.add({
             targets: this.life,
             duration: outDuration,
             x: gameOptions.gameWidth,
@@ -167,9 +187,17 @@ export default class MenuScene extends Scene
             paused: true
         });
 
-        this.tweenBalanceOut = this.tweens.add({
+        const tweenBalanceOut = this.tweens.add({
             targets: this.balance,
             duration: outDuration,
+            y: gameOptions.gameHeight,
+            ease: outEase,
+            paused: true
+        });
+
+        this.tweenDescriptionOut = this.tweens.add({
+            targets: this.description,
+            duration: outDuration / 2,
             y: gameOptions.gameHeight,
             ease: outEase,
             paused: true
@@ -183,8 +211,8 @@ export default class MenuScene extends Scene
             paused: true,
             onComplete: () => {
                 this.tweenWorkOut.play();
-                this.tweenLifeOut.play();
-                this.tweenBalanceOut.play();
+                tweenLifeOut.play();
+                tweenBalanceOut.play();
             }
         });
 

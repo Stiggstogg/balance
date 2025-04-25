@@ -67,7 +67,7 @@ export default class PointsScene extends Scene
         this.finalPointsTitle = this.add.text(gameOptions.gameWidth / 2 - 309, 0, 'Final', gameOptions.titleTextStyle).setOrigin(0, 1);      // the x position of "Final " needs to be very accurate as it needs to perfectly align with the "Point"
 
         // Stage title
-        this.stageTitle = this.add.text(gameOptions.gameWidth / 2, gameOptions.gameHeight, 'Stage ' + gameManager.getStage() + ' / ' + gameManager.getTotalStages(), gameOptions.smallTitleTextStyle).setOrigin(0.5, 0);
+        this.stageTitle = this.add.text(gameOptions.gameWidth / 2, gameOptions.gameHeight, 'Day ' + gameManager.getStage() + '/' + gameManager.getTotalStages(), gameOptions.smallTitleTextStyle).setOrigin(0.5, 0);
 
         // Work and life titles and descriptions
         this.workTitle = this.add.text(0, this.startY + 5 * this.distanceY, 'Work' , gameOptions.smallTitleTextStyle).setOrigin(0.5, 0);
@@ -84,7 +84,7 @@ export default class PointsScene extends Scene
         this.workProgressValue = this.add.text(this.positionLeftRight + this.positionLeftRightDistance, this.startY + 9 * this.distanceY, gameManager.getWorkProgress().toString(), gameOptions.smallSubTitleTextStyle).setOrigin(0, 0).setVisible(false);
         this.workMultiplierValue = this.add.text(this.positionLeftRight + this.positionLeftRightDistance, this.startY + 13 * this.distanceY, 'x ' + gameManager.getWorkMultiplier().toString(), gameOptions.smallSubTitleTextStyle).setOrigin(0, 0).setVisible(false);
 
-        this.lifeProgressValue = this.add.text(gameOptions.gameWidth - this.positionLeftRight + this.positionLeftRightDistance, this.startY + 9 * this.distanceY, gameManager.getLifeProgress().toString() + '%', gameOptions.smallSubTitleTextStyle).setOrigin(0, 0).setVisible(false);
+        this.lifeProgressValue = this.add.text(gameOptions.gameWidth - this.positionLeftRight + this.positionLeftRightDistance, this.startY + 9 * this.distanceY, gameManager.getLifeProgress().toString() + ' %', gameOptions.smallSubTitleTextStyle).setOrigin(0, 0).setVisible(false);
         this.lifePointsValue = this.add.text(gameOptions.gameWidth - this.positionLeftRight + this.positionLeftRightDistance, this.startY + 13 * this.distanceY, gameManager.getLifePoints().toString(), gameOptions.smallSubTitleTextStyle).setOrigin(0, 0).setVisible(false);
 
         // total points
@@ -96,7 +96,7 @@ export default class PointsScene extends Scene
         this.totalButton.setY(gameOptions.gameHeight + this.totalButton.image.height/2);
         this.totalButton.deactivate();
 
-        this.continueButton = this.add.existing(new UIButton(this, gameOptions.gameWidth / 2, 0, 'Continue', ButtonId.CONTINUE));
+        this.continueButton = this.add.existing(new UIButton(this, gameOptions.gameWidth / 2, 0, 'Next Day', ButtonId.CONTINUE));
         this.continueButton.setY(gameOptions.gameHeight + this.continueButton.image.height/2);
         this.continueButton.deactivate();
 

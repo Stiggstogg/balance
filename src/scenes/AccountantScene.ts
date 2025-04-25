@@ -227,7 +227,7 @@ export default class AccountantScene extends BaseFrameScene
     handleButtonClick(value: number) {
 
         // write button value to the total text
-        this.totalText.setText(this.toMoneyString(this.cash));
+        this.totalText.setText(this.toMoneyString(this.total));
 
         // check if the button value is correct
         if (value === this.total) {

@@ -40,8 +40,8 @@ export default class DanceScene extends BaseFrameScene
         // add background, dancer, bubble and moves
         this.background = this.add.image(0, 0, 'dance-background').setOrigin(1, 0).setDepth(1);
         this.dancer = this.add.existing(new Dancer(this, 0, 0)).setDepth(1.1);
-        this.bubble = this.add.image(800, 45, 'dance-bubble').setOrigin(0).setDepth(1).setVisible(false);
-        this.moves = this.add.image(this.bubble.x, this.bubble.y, 'dance-moves').setOrigin(0).setDepth(1).setVisible(false);
+        this.bubble = this.add.image(901, 103, 'dance-bubble').setOrigin(0.5).setDepth(1).setVisible(false);
+        this.moves = this.add.image(this.bubble.x, this.bubble.y, 'dance-moves').setOrigin(0.5).setDepth(1).setVisible(false);
         this.validation = this.add.image(890, 240, 'dance-validation', 1).setOrigin(0.5).setDepth(1).setVisible(false);
 
         // add buttons
@@ -192,6 +192,16 @@ export default class DanceScene extends BaseFrameScene
 
         // set the picture to the right move
         this.moves.setFrame(newMoveIndex);
+
+        // make the bubble and move blink (scale up and down)
+        this.tweens.add({
+            targets: [this.moves, this.bubble],
+            duration: 300,
+            scale: 1.1,
+            ease: 'Cubic.InOut',
+            yoyo: true,
+            repeat: 2,
+        });
 
         // set the current move (for validation) and the index
         this.currentMove = allDanceMoves[newMoveIndex];
