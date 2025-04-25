@@ -179,7 +179,8 @@ export default class PointsScene extends Scene
             gameManager.nextStage();
 
             this.tweenTitleOut.once('complete', () => {
-                this.scene.start('Game');
+                this.scene.launch('Game');
+                this.scene.stop();
             });
 
         });
@@ -200,7 +201,8 @@ export default class PointsScene extends Scene
             this.tweenTotalPointsValueOut.play();
 
             this.tweenTitleOut.once('complete', () => {
-                this.scene.start('Menu');
+                this.scene.launch('Menu');
+                this.scene.stop();
             });
 
         });
@@ -222,6 +224,17 @@ export default class PointsScene extends Scene
                 this.scene.start('Menu');
             });
 
+        });
+
+        // remove all custom event listeners when the scene is destroyed
+        this.events.once('shutdown', () => {
+            this.events.off('click' + ButtonId.TOTAL);
+            this.events.off('click' + ButtonId.CONTINUE);
+            this.events.off('click' + ButtonId.STOP);
+            this.events.off('click' + ButtonId.MENU);
+            this.tweenTotalPoints.off('complete');
+            this.tweenTitleOut.off('complete');
+            this.tweenFinalTitleOut.off('complete');
         });
 
         // add tweens

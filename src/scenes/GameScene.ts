@@ -70,6 +70,13 @@ export default class GameScene extends Scene
             });
         });
 
+        // remove all custom event listeners when the scene is destroyed
+        this.events.once('shutdown', () => {
+            this.events.off('click' + ButtonId.START);
+            this.events.off('startGame');
+            this.events.off('stopGame');
+        });
+
     }
 
     update() {

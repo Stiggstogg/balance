@@ -182,9 +182,15 @@ export default class BaseFrameScene extends Scene
             this.progressText.setVisible(false);
         });
 
-        // stop the play song when the scene shuts down
+        // stop the play song when the scene shuts down and remove all custom event listeners
         this.events.once('shutdown', () => {
             this.soundManager.playSong.stop();
+
+            this.events.off('click' + ButtonId.START);
+            this.tweenTextsOut.off('complete');
+            this.events.off('startGame');
+            this.events.off('stopGame');
+
         });
 
     }

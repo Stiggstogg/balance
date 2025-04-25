@@ -121,6 +121,8 @@ export default class AccountantScene extends BaseFrameScene
         // remove all custom event listeners when the scene is destroyed
         this.events.once('shutdown', () => {
             this.events.off('click' + ButtonId.ACCOUNTANT);
+            this.events.off('startGame');
+            this.events.off('stopGame');
         });
 
     }

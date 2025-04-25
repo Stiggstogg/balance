@@ -156,6 +156,8 @@ export default class LawnScene extends BaseFrameScene
         // remove all custom event listeners when the scene is destroyed
         this.events.once('shutdown', () => {
             this.events.off('click' + ButtonId.LAWN);
+            this.events.off('startGame');
+            this.events.off('stopGame');
         });
 
     }

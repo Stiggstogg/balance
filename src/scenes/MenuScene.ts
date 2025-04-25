@@ -95,6 +95,13 @@ export default class MenuScene extends Scene
 
         });
 
+        // remove all custom event listeners when the scene is destroyed
+        this.events.once('shutdown', () => {
+            this.events.off('click' + ButtonId.PLAY);
+            this.tweenWorkOut.off('complete');
+        });
+
+
     }
 
     // add and play tweens

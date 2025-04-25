@@ -31,6 +31,7 @@ export default class BaseButton extends GameObjects.Container {
             this.click();
             this.scene.sound.play('click');
         });
+
     }
 
     // Action which should happen when the sprite is clicked
