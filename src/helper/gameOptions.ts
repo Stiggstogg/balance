@@ -88,7 +88,7 @@ class GameOptions {
         this.pointsSongVolume = 0.75;              // volume of the points song
         this.clickSoundVolume = 0.75;              // volume of the click sound
         this.correctSoundVolume = 1;            // volume of the correct sound
-        this.errorSoundVolume = 1;              // volume of the error sound
+        this.errorSoundVolume = 0.9;              // volume of the error sound
         this.countdownLowSoundVolume = 0.75;       // volume of the countdown low sound
         this.countdownHighSoundVolume = 0.75;      // volume of the countdown high sound
         this.mowerSoundVolume = 0.75;              // volume of the mower sound

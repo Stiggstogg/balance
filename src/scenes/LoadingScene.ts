@@ -40,13 +40,13 @@ import SpecialEliteFont from '../assets/fonts/SpecialElite-Regular.ttf';
 
 // audio
 import clickSound from '../assets/audio/click.mp3';
-import correctSound from '../assets/audio/correct.mp3';
-import errorSound from '../assets/audio/error.mp3';
+import correctSound from '../assets/audio/correct-new.mp3';
+import errorSound from '../assets/audio/error-new.mp3';
 import countdownHighSound from '../assets/audio/countdown-high.mp3';
 import countdownLowSound from '../assets/audio/countdown-low.mp3';
 import mowerSound from '../assets/audio/mower.mp3';
 import pointsSound from '../assets/audio/points.mp3';
-import totalPointsSound from '../assets/audio/total-points.mp3';
+import totalPointsSound from '../assets/audio/total-points-new.mp3';
 import menuSongSound from '../assets/audio/menu-song.mp3';
 import playSongSound from '../assets/audio/play-song.mp3';
 import pointsSongSound from '../assets/audio/points-song.mp3';

@@ -12,6 +12,7 @@ export default class MenuScene extends Scene
     private dash: GameObjects.Text;
     private balance: GameObjects.Text;
     private description: GameObjects.Text;
+    private controls: GameObjects.Text;
     private button: UIButton;
     private creditsButton: UIButton;
     private tweenWorkOut: Phaser.Tweens.Tween;
@@ -50,6 +51,9 @@ export default class MenuScene extends Scene
             gameOptions.normalTextStyle).setOrigin(0.5, 0);
         this.description.setX(gameOptions.gameWidth + this.description.width);
         this.description.setWordWrapWidth(gameOptions.gameWidth * 0.70);        // set word wrap width
+
+        // controls description
+        this.controls = this.add.text(gameOptions.gameWidth, gameOptions.gameHeight * 0.85, 'Controls:\nMouse / Touch', gameOptions.normalTextStyle).setOrigin(0);
 
         // Play button
         this.button = this.add.existing(new UIButton(this, this.middle, gameOptions.gameHeight + this.buttonDistanceY, 'Play', ButtonId.PLAY));
@@ -193,6 +197,7 @@ export default class MenuScene extends Scene
             onComplete: () => {
                 this.button.activate();         // activate the button
                 tweenCreditsButtonIn.play();    // bring in the credits button
+                tweenControlsIn.play();        // bring in the description of the controls
             }
         });
 
@@ -205,6 +210,14 @@ export default class MenuScene extends Scene
             onComplete: () => {
                 this.creditsButton.activate();        // activate the button
             }
+        });
+
+        const tweenControlsIn = this.tweens.add({
+            targets: this.controls,
+            duration: inDuration / 2,
+            x: gameOptions.gameWidth * 0.8,
+            ease: inEase,
+            paused: true
         });
 
         // moving out
@@ -259,6 +272,7 @@ export default class MenuScene extends Scene
                 this.button.deactivate();        // deactivate the button
                 tweenCreditsButtonOut.play();    // move the credits button out
                 tweenDescriptionOut.play();        // move the description out
+                tweenControlsOut.play();
             },
             onComplete: () => {
                 this.tweenWorkOut.play();
@@ -271,11 +285,19 @@ export default class MenuScene extends Scene
             targets: this.creditsButton,
             duration: inDuration / 2,
             y: gameOptions.gameHeight + this.creditsButton.image.height / 2,
-            ease: inEase,
+            ease: outEase,
             paused: true,
-            onSTart: () => {
+            onStart: () => {
                 this.creditsButton.deactivate();        // activate the button
             }
+        });
+
+        const tweenControlsOut = this.tweens.add({
+            targets: this.controls,
+            duration: inDuration / 2,
+            x: gameOptions.gameWidth,
+            ease: outEase,
+            paused: true
         });
 
     }
