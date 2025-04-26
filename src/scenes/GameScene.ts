@@ -39,7 +39,7 @@ export default class GameScene extends Scene
             this.scene.get(gameManager.getNextLifeScene()).events.emit('click' + ButtonId.START);
         });
 
-        // start the timer when the coutdown is over (game starts)
+        // start the timer when the countdown is over (game starts)
         this.scene.get(gameManager.getNextWorkScene()).events.once('startGame', () => {
             this.watch.startTimer();
         });

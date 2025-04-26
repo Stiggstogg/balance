@@ -17,10 +17,10 @@ import accountantButtonImg from '../assets/images/accountant-button.png';
 import accountantValidationImg from '../assets/images/accountant-validation.png';
 import lawnBackgroundImg from '../assets/images/lawn-background.png';
 import lawnLawnImg from '../assets/images/lawn-lawn.png';
-import lawnMowerImg from '../assets/images/lawn-mower.png';
+import lawnMowerImg from '../assets/images/lawn-mower-new.png';
 import lawnPoolImg from '../assets/images/lawn-pool.png';
 import lawnSandImg from '../assets/images/lawn-sand.png';
-import lawnButtonImg from '../assets/images/lawn-button.png';
+import lawnButtonImg from '../assets/images/lawn-button-large.png';
 import editorBookImg from '../assets/images/editor-book.png';
 import editorButtonImg from '../assets/images/editor-button.png';
 import editorSelectionImg from '../assets/images/editor-selection.png';
@@ -30,7 +30,7 @@ import danceArmImg from '../assets/images/dance-human-arm.png';
 import danceBackgroundImg from '../assets/images/dance-background.png';
 import danceBubbleImg from '../assets/images/dance-bubble.png';
 import danceMovesImg from '../assets/images/dance-moves.png';
-import danceButtonImg from '../assets/images/dance-button.png';
+import danceButtonImg from '../assets/images/dance-button-large.png';
 import danceValidationImg from '../assets/images/dance-validation.png';
 
 // fonts
@@ -68,15 +68,15 @@ export default class LoadingScene extends Scene
         this.add.sprite(gameOptions.gameWidth/2, gameOptions.gameHeight/2, 'logo').setScale(1, 1); // logo is already preloaded in 'Boot' scene
 
         // text
-        this.add.text(gameOptions.gameWidth/2, gameOptions.gameHeight * 0.20, 'CLOWNGAMING', {fontSize: '70px', color: '#FFFF00', fontStyle: 'bold'}).setOrigin(0.5);
-        this.add.text(gameOptions.gameWidth/2, gameOptions.gameHeight * 0.73, 'Loading', {fontSize: '30px', color: '#27FF00'}).setOrigin(0.5);
+        this.add.text(gameOptions.gameWidth/2, gameOptions.gameHeight * 0.15, 'CLOWNGAMING', {fontSize: '70px', color: '#639bff', fontStyle: 'bold'}).setOrigin(0.5);
+        this.add.text(gameOptions.gameWidth/2, gameOptions.gameHeight * 0.8, 'Loading', {fontSize: '38px', color: '#639bff'}).setOrigin(0.5);
 
         // progress bar background (e.g grey)
         const bgBar = this.add.graphics();
-        const barW = gameOptions.gameWidth * 0.3;            // progress bar width
-        const barH = barW * 0.1;          // progress bar height
+        const barW = gameOptions.gameWidth * 0.4;            // progress bar width
+        const barH = barW * 0.07;          // progress bar height
         const barX = gameOptions.gameWidth / 2 - barW / 2;       // progress bar x coordinate (origin is 0, 0)
-        const barY = gameOptions.gameHeight * 0.8 - barH / 2   // progress bar y coordinate (origin is 0, 0)
+        const barY = gameOptions.gameHeight * 0.9 - barH / 2   // progress bar y coordinate (origin is 0, 0)
         bgBar.setPosition(barX, barY);
         bgBar.fillStyle(0xF5F5F5, 1);
         bgBar.fillRect(0, 0, barW, barH);    // position is 0, 0 as it was already set with ".setPosition()"
@@ -92,7 +92,7 @@ export default class LoadingScene extends Scene
             progressBar.clear();
 
             // set style
-            progressBar.fillStyle(0x27ff00, 1);
+            progressBar.fillStyle(0x639bff, 1);
 
             // draw rectangle
             progressBar.fillRect(0, 0, value * barW, barH);
@@ -131,7 +131,7 @@ export default class LoadingScene extends Scene
         // load spritesheets
         this.load.spritesheet('accountant-validation', accountantValidationImg, {frameWidth: 32, frameHeight: 32, margin: 1, spacing: 1});
         this.load.spritesheet('lawn-mower', lawnMowerImg, {frameWidth: 40, frameHeight: 20, margin: 1, spacing: 1});
-        this.load.spritesheet('lawn-button', lawnButtonImg, {frameWidth: 136, frameHeight: 47, margin: 1, spacing: 1});
+        this.load.spritesheet('lawn-button', lawnButtonImg, {frameWidth: 136, frameHeight: 60, margin: 1, spacing: 1});
         this.load.spritesheet('dance-body', danceBodyImg, {frameWidth: 171, frameHeight: 338, margin: 1, spacing: 1});
         this.load.spritesheet('dance-arm', danceArmImg, {frameWidth: 57, frameHeight: 205, margin: 1, spacing: 1});
         this.load.spritesheet('dance-moves', danceMovesImg, {frameWidth: 202, frameHeight: 99, margin: 1, spacing: 1});
@@ -170,7 +170,6 @@ export default class LoadingScene extends Scene
         //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
         this.scene.start('Background');
         this.scene.launch('Menu');
-        //this.scene.launch('Test3'); // TODO: Just for testing to skip the menu
     }
 
     createAnimations() {

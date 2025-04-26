@@ -128,7 +128,7 @@ export default class BaseFrameScene extends Scene
         this.progressText.setPosition(progressTextX, 25);
 
         // countdown number and sounds
-        this.countdown = this.add.text(this.xIn + this.sideFactor * this.frameBack.width / 2, gameOptions.gameHeight / 2, String(gameOptions.countDownTime), gameOptions.titleTextStyle).setOrigin(0.5).setDepth(1.5).setScale(0);    // TODO: Change back to 3, this is only for faster testing
+        this.countdown = this.add.text(this.xIn + this.sideFactor * this.frameBack.width / 2, gameOptions.gameHeight / 2, String(gameOptions.countDownTime), gameOptions.titleTextStyle).setOrigin(0.5).setDepth(1.5).setScale(0);
 
         // initialize the sound manager
         this.soundManager = SoundManager.getInstance(this);

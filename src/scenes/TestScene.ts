@@ -11,7 +11,6 @@ export default class TestScene extends Scene
     private lawn: GameObjects.RenderTexture;
     private mower: Mower;
     private mowerLine: GameObjects.Line;
-    private lineStart: {x: number, y: number};
 
     constructor()
     {

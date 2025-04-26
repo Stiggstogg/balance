@@ -36,7 +36,6 @@ class GameOptions {
     public readonly editorMultiplierFunction: ResultFunction;           // the function which is used to calculate from the number of correctly detected typos to the multiplier
     public readonly lawnPointsFunctions: ResultFunction[];              // the functions which are used to calculate from the percentage of mowed grass to the points
     public readonly danceMoveLength: { min: number; max: number };      // number of seconds for how long a dance move should be shown
-    public readonly danceProgressUpdateInterval: number;                // interval in seconds for the progress to be updated
     public readonly dancePointsFunctions: ResultFunction[];             // the functions which are used to calculate from the percentage of how long your moves were correct to the points
     public readonly titleTextStyle: Types.GameObjects.Text.TextStyle;
     public readonly smallTitleTextStyle: Types.GameObjects.Text.TextStyle;
@@ -66,7 +65,7 @@ class GameOptions {
 
         // time limit for each mini game
         this.countDownTime = 3;             // the time for the countdown in seconds
-        this.timeLimit = 60; // seconds      TODO: Set back to 60. This is only for testing purposes
+        this.timeLimit = 60;                // seconds
 
         // tween lengths
         this.frameTweenLength = 1000; // milliseconds

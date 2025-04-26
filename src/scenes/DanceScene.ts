@@ -7,7 +7,7 @@ import DanceButton from '../sprites/DanceButton.ts';
 import {DanceMove} from '../helper/interfaces.ts';
 import gameManager from '../helper/GameManager.ts';
 
-// "Life: "Dancing Class" scene
+// Life: "Dancing Class" scene
 export default class DanceScene extends BaseFrameScene
 {
 
@@ -42,12 +42,12 @@ export default class DanceScene extends BaseFrameScene
         // add background, dancer, bubble and moves
         this.background = this.add.image(0, 0, 'dance-background').setOrigin(1, 0).setDepth(1);
         this.dancer = this.add.existing(new Dancer(this, 0, 0)).setDepth(1.1);
-        this.bubble = this.add.image(901, 103, 'dance-bubble').setOrigin(0.5).setDepth(1).setVisible(false);
+        this.bubble = this.add.image(901, 85, 'dance-bubble').setOrigin(0.5).setDepth(1).setVisible(false);
         this.moves = this.add.image(this.bubble.x, this.bubble.y, 'dance-moves').setOrigin(0.5).setDepth(1).setVisible(false);
         this.validation = this.add.image(630, 120, 'dance-validation', 1).setOrigin(0.5).setDepth(1).setVisible(false);
 
         // add buttons
-        const buttonY = 440;
+        const buttonY = 435;
         const buttonDistance = 200;
         const buttonMiddleX = 750;
         this.buttonLeft = this.add.existing(new DanceButton(this, buttonMiddleX - buttonDistance/2, buttonY, ButtonId.DANCE, true)).setDepth(1).setVisible(false);
@@ -143,7 +143,7 @@ export default class DanceScene extends BaseFrameScene
 
         // move the background
         const backgroundPos = {x: -12, y: 12};       // set relative position to outer frame
-        const dancerPos = {x: -350, y: 70};       // set relative position to outer frame
+        const dancerPos = {x: -350, y: 60};       // set relative position to outer frame
 
         this.background.setPosition(this.frameOuter.x + backgroundPos.x, this.frameOuter.y + backgroundPos.y);
         this.dancer.setPosition(this.frameOuter.x + dancerPos.x, this.frameOuter.y + dancerPos.y);
