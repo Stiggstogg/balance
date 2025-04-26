@@ -23,6 +23,6 @@ More information on the game page!
 # Video and Screenshots:
 Youtube: Comming soon (or never 😄)
 
-![Screenshot 1](https://img.itch.zone/aW1hZ2UvMzQ3MTQxOS8yMDkwMDczNC5wbmc=/347x500/Wp5okt.png)
-![Screenshot 2](https://img.itch.zone/aW1hZ2UvMzQ3MTQxOS8yMDkwMDczNS5wbmc=/347x500/gFR4pN.png)
-![Screenshot 3](https://img.itch.zone/aW1hZ2UvMzQ3MTQxOS8yMDkwMDc1NC5wbmc=/347x500/lhgQmg.png)
+![Screenshot 1](https://img.itch.zone/aW1hZ2UvMzQ3MTQxOS8yMDkwMDczNC5wbmc=/original/zWhd87.png)
+![Screenshot 2](https://img.itch.zone/aW1hZ2UvMzQ3MTQxOS8yMDkwMDczNS5wbmc=/original/D9lqJ%2B.png)
+![Screenshot 3](https://img.itch.zone/aW1hZ2UvMzQ3MTQxOS8yMDkwMDc1NC5wbmc=/original/5TSOLt.png)
