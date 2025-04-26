@@ -9,6 +9,7 @@ import BootScene from './scenes/BootScene';
 import LoadingScene from './scenes/LoadingScene';
 import BackgroundScene from './scenes/BackgroundScene';
 import MenuScene from './scenes/MenuScene';
+import CreditsScene from './scenes/CreditsScene.ts';
 import GameScene from './scenes/GameScene';
 import AccountantScene from './scenes/AccountantScene';
 import LawnScene from './scenes/LawnScene.ts';
@@ -49,6 +50,7 @@ const config: Types.Core.GameConfig = {
         LoadingScene,
         BackgroundScene,
         MenuScene,
+        CreditsScene,
         GameScene,
         LawnScene,
         DanceScene,

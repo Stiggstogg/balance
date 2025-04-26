@@ -13,8 +13,8 @@ export default class MenuScene extends Scene
     private balance: GameObjects.Text;
     private description: GameObjects.Text;
     private button: UIButton;
+    private creditsButton: UIButton;
     private tweenWorkOut: Phaser.Tweens.Tween;
-    private tweenDescriptionOut: Phaser.Tweens.Tween;
     private tweenButtonOut: Phaser.Tweens.Tween;
     private offsetX: number;
     private startY: number;
@@ -44,15 +44,21 @@ export default class MenuScene extends Scene
         this.balance = this.add.text(this.middle, gameOptions.gameHeight, 'B a l a n c e', gameOptions.titleTextStyle).setOrigin(0.5, 0);
 
         // description
-        this.description = this.add.text(this.middle, gameOptions.gameHeight,
+        this.description = this.add.text(0, this.startY + this.descriptionDistanceY,
             'You juggle two jobs and a whirlwind of daily life tasks. Each day, you must tackle one work task and one life task — simultaneously!\n' +
             'Find your balance and complete all tasks across ' + gameManager.getTotalStages().toString() + ' demanding days to maximize your score and prove you can handle it all.',
             gameOptions.normalTextStyle).setOrigin(0.5, 0);
+        this.description.setX(gameOptions.gameWidth + this.description.width);
         this.description.setWordWrapWidth(gameOptions.gameWidth * 0.70);        // set word wrap width
 
-        // button
+        // Play button
         this.button = this.add.existing(new UIButton(this, this.middle, gameOptions.gameHeight + this.buttonDistanceY, 'Play', ButtonId.PLAY));
         this.button.deactivate();
+
+        // Credits button
+        this.creditsButton = this.add.existing(new UIButton(this, gameOptions.gameWidth * 0.12, 0, 'Credits', ButtonId.CREDITS));
+        this.creditsButton = this.creditsButton.setY(gameOptions.gameHeight + this.creditsButton.image.height /2);
+        this.creditsButton.deactivate();
 
         // add and play menu song
         const soundManager =  SoundManager.getInstance(this);                                    // get the sound manager
@@ -70,14 +76,10 @@ export default class MenuScene extends Scene
         // Change to game scene when button is clicked
         this.events.once('click' + ButtonId.PLAY, () => {
 
-            // deactivate the button
-            this.button.deactivate();
-
             // create a new game
             gameManager.newGame();
 
             // move the title and the button away
-            this.tweenDescriptionOut.play();        // play the description tween
             this.tweenButtonOut.play();             // this will also trigger the other tweens (on complete)
 
             // launch the game scene as soon as the tweens are done
@@ -95,9 +97,31 @@ export default class MenuScene extends Scene
 
         });
 
+        // Change to game scene when button is clicked
+        this.events.once('click' + ButtonId.CREDITS, () => {
+
+            // move the title and the button away
+            this.tweenButtonOut.play();             // this will also trigger the other tweens (on complete)
+
+            // launch the game scene as soon as the tweens are done
+            this.tweenWorkOut.once('complete', () => {
+
+                this.time.addEvent({            // wait a bit and then start the game
+                    delay: 500,
+                    callback: () => {
+                        this.scene.launch('Credits');
+                        this.scene.stop();
+                    }
+                });
+
+            });
+
+        });
+
         // remove all custom event listeners when the scene is destroyed
         this.events.once('shutdown', () => {
             this.events.off('click' + ButtonId.PLAY);
+            this.events.off('click' + ButtonId.CREDITS);
             this.tweenWorkOut.off('complete');
         });
 
@@ -127,9 +151,8 @@ export default class MenuScene extends Scene
             onComplete: () => {
                 this.dash.setVisible(true);     // make dash visible
 
-                // bring the description and buttons in
+                // bring the description
                 tweenDescriptionIn.play();
-                tweenButtonIn.play();        // play the button tween
             }
         });
 
@@ -151,10 +174,14 @@ export default class MenuScene extends Scene
 
         const tweenDescriptionIn = this.tweens.add({
             targets: this.description,
-            duration: inDuration / 2,
-            y: this.startY + this.descriptionDistanceY,
+            duration: inDuration,
+            x: gameOptions.gameWidth / 2,
             ease: inEase,
-            paused: true
+            paused: true,
+            onComplete: () => {
+                // bring the button in
+                tweenButtonIn.play();
+            }
         });
 
         const tweenButtonIn = this.tweens.add({
@@ -164,7 +191,19 @@ export default class MenuScene extends Scene
             ease: inEase,
             paused: true,
             onComplete: () => {
-                this.button.activate();        // activate the button
+                this.button.activate();         // activate the button
+                tweenCreditsButtonIn.play();    // bring in the credits button
+            }
+        });
+
+        const tweenCreditsButtonIn = this.tweens.add({
+            targets: this.creditsButton,
+            duration: inDuration / 2,
+            y: gameOptions.gameHeight * 0.92,
+            ease: inEase,
+            paused: true,
+            onComplete: () => {
+                this.creditsButton.activate();        // activate the button
             }
         });
 
@@ -202,10 +241,10 @@ export default class MenuScene extends Scene
             paused: true
         });
 
-        this.tweenDescriptionOut = this.tweens.add({
+        const tweenDescriptionOut = this.tweens.add({
             targets: this.description,
             duration: outDuration / 2,
-            y: gameOptions.gameHeight,
+            x: gameOptions.gameWidth + this.description.width,
             ease: outEase,
             paused: true
         });
@@ -216,10 +255,26 @@ export default class MenuScene extends Scene
             y: gameOptions.gameHeight + this.buttonDistanceY,
             ease: outEase,
             paused: true,
+            onStart: () => {
+                this.button.deactivate();        // deactivate the button
+                tweenCreditsButtonOut.play();    // move the credits button out
+                tweenDescriptionOut.play();        // move the description out
+            },
             onComplete: () => {
                 this.tweenWorkOut.play();
                 tweenLifeOut.play();
                 tweenBalanceOut.play();
+            }
+        });
+
+        const tweenCreditsButtonOut = this.tweens.add({
+            targets: this.creditsButton,
+            duration: inDuration / 2,
+            y: gameOptions.gameHeight + this.creditsButton.image.height / 2,
+            ease: inEase,
+            paused: true,
+            onSTart: () => {
+                this.creditsButton.deactivate();        // activate the button
             }
         });
 

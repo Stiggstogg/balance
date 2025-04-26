@@ -10,7 +10,9 @@ export enum ButtonId {
     TOTAL  = 'totalBtn',
     CONTINUE = 'continueBtn',
     STOP = 'stopBtn',
-    MENU = 'menuBtn'
+    MENU = 'menuBtn',
+    CREDITS = 'creditsBtn',
+    BACK = 'backBtn',
 }
 
 export enum Side {
