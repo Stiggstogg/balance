@@ -1,4 +1,4 @@
-import {GameObjects, Math as Mathphaser} from 'phaser';
+import {GameObjects, Math as Mathphaser, Tweens} from 'phaser';
 import {ButtonId, GameState, Side} from '../helper/enums.ts';
 import BaseFrameScene from './BaseFrameScene.ts';
 import gameOptions from '../helper/gameOptions.ts';
@@ -23,7 +23,9 @@ export default class DanceScene extends BaseFrameScene
     private danceFramesTotal: number;
     private danceFramesCorrect: number;
     private validation: GameObjects.Image;
-    private nextPorgressUpdate: number;
+    private tweenCorrect: Tweens.Tween;
+    private tweenError: Tweens.Tween;
+
 
     constructor()
     {
@@ -42,7 +44,7 @@ export default class DanceScene extends BaseFrameScene
         this.dancer = this.add.existing(new Dancer(this, 0, 0)).setDepth(1.1);
         this.bubble = this.add.image(901, 103, 'dance-bubble').setOrigin(0.5).setDepth(1).setVisible(false);
         this.moves = this.add.image(this.bubble.x, this.bubble.y, 'dance-moves').setOrigin(0.5).setDepth(1).setVisible(false);
-        this.validation = this.add.image(890, 240, 'dance-validation', 1).setOrigin(0.5).setDepth(1).setVisible(false);
+        this.validation = this.add.image(630, 120, 'dance-validation', 1).setOrigin(0.5).setDepth(1).setVisible(false);
 
         // add buttons
         const buttonY = 440;
@@ -60,9 +62,11 @@ export default class DanceScene extends BaseFrameScene
         this.danceFramesTotal = 0;
         this.danceFramesCorrect = 0;
 
-        // set the start progress value and initialize the progress update timer
+        // set the start progress value
         this.setProgress(100);
-        this.nextPorgressUpdate = Date.now();
+
+        // add the validation tweens
+        this.addValidationTweens();
 
         // event listeners for the button clicks
         this.events.on('click' + ButtonId.DANCE, (left: boolean) => {
@@ -92,8 +96,13 @@ export default class DanceScene extends BaseFrameScene
             // set the time when the next dance move should be triggered
             this.nextDanceMoveTime = Date.now() + Mathphaser.RND.integerInRange(gameOptions.danceMoveLength.min, gameOptions.danceMoveLength.max) * 1000;
 
-            // set the time when the next progress update should be triggered
-            this.nextPorgressUpdate = Date.now() + gameOptions.danceProgressUpdateInterval * 1000;
+            // set the time when the fast dance should start
+            this.time.addEvent({
+                delay: 32 * 1000,
+                callback: () => {
+                    this.dancer.startFastDance();
+                }
+            })
 
         });
 
@@ -103,7 +112,7 @@ export default class DanceScene extends BaseFrameScene
             // set the progress one last time
             this.setProgress(Math.round((this.danceFramesCorrect / this.danceFramesTotal) * 100));
 
-            // calculate the multiplier based on the progress and store them in the game manager
+            // calculate the points based on the progress and store them in the game manager
             gameManager.setLifeProgressPoints(this.progress, this.calculateResult(this.progress, gameOptions.dancePointsFunctions));
 
             // make the bubble, moves and buttons invisible
@@ -145,10 +154,9 @@ export default class DanceScene extends BaseFrameScene
                 this.newMove();
             }
 
-            if (Date.now() >= this.nextPorgressUpdate) {
-                this.setProgress(Math.round((this.danceFramesCorrect / this.danceFramesTotal) * 100));
-                this.nextPorgressUpdate = Date.now() + gameOptions.danceProgressUpdateInterval * 1000;
-            }
+            // set the progress every frame
+            this.setProgress(Math.round((this.danceFramesCorrect / this.danceFramesTotal) * 100), false);
+
         }
 
         // count the points in case the move is correct
@@ -165,10 +173,33 @@ export default class DanceScene extends BaseFrameScene
 
                 // change the validation sign to green
                 this.validation.setFrame(1);
+
+                // play the correct tween
+                if (!this.tweenCorrect.isPlaying()) {
+
+                    this.tweenCorrect.play();
+
+                }
+
+                if (this.tweenError.isPlaying()) {
+                    this.tweenError.stop();
+                }
+
             }
             else {
                 // wrong move, change the validation sign to red
                 this.validation.setFrame(0);
+
+                // play the error tween
+                // play the correct tween
+                if (!this.tweenError.isPlaying()) {
+
+                    this.tweenError.play();
+                }
+
+                if (this.tweenCorrect.isPlaying()) {
+                    this.tweenCorrect.stop();
+                }
             }
 
         }
@@ -211,6 +242,33 @@ export default class DanceScene extends BaseFrameScene
 
         // set the time when the next move should be triggered
         this.nextDanceMoveTime = Date.now() + Mathphaser.RND.integerInRange(gameOptions.danceMoveLength.min, gameOptions.danceMoveLength.max) * 1000;
+
+    }
+
+    // Add the validation tweens
+    addValidationTweens() {
+
+        this.tweenCorrect = this.tweens.add({       // add the tween (tweens are destroyed as soon as you stop them)
+            targets: this.validation,
+            duration: 500,
+            scale: 1.1,
+            yoyo: true,
+            repeat: -1,
+            ease: 'Linear',
+            paused: true,
+            persist: true
+        });
+
+        this.tweenError = this.tweens.add({     // add the tween (tweens are destroyed as soon as you stop them)
+            targets: this.validation,
+            duration: 250,
+            scale: 1.1,
+            yoyo: true,
+            repeat: -1,
+            ease: 'Linear',
+            paused: true,
+            persist: true
+        });
 
     }
 

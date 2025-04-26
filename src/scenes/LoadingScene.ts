@@ -185,6 +185,13 @@ export default class LoadingScene extends Scene
         this.anims.create({
             key: 'dance',
             frames: this.anims.generateFrameNames('dance-body', {frames: [0, 1]}),
+            frameRate: 2,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'dance-fast',
+            frames: this.anims.generateFrameNames('dance-body', {frames: [0, 1]}),
             frameRate: 4,
             repeat: -1
         });

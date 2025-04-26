@@ -337,7 +337,7 @@ export default class BaseFrameScene extends Scene
     }
 
     // change progress
-    setProgress(progress: number): void {
+    setProgress(progress: number, blink: boolean = true): void {
 
         this.progress = progress;
 
@@ -349,15 +349,17 @@ export default class BaseFrameScene extends Scene
             this.progressText.setText(Math.round(this.progress).toString() + ' %');
         }
 
-        // titles and description out
-        this.tweens.add({
-            targets: this.progressText,
-            duration: 200,
-            scale: 1.3,
-            ease: 'Cubic.Out',
-            yoyo: true,
-            paused: false
-        });
+        // let the progess text blink
+        if (blink) {
+            this.tweens.add({
+                targets: this.progressText,
+                duration: 200,
+                scale: 1.3,
+                ease: 'Cubic.Out',
+                yoyo: true,
+                paused: false
+            });
+        }
 
     }
 

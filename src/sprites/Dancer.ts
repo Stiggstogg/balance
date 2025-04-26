@@ -69,6 +69,11 @@ export default class Dancer extends GameObjects.Container {
         this.danceBody.play('dance');
     }
 
+    // start fast dane
+    startFastDance() {
+        this.danceBody.play('dance-fast');
+    }
+
     // stop the dance
     stopDance() {
         this.danceBody.stop();

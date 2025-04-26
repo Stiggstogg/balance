@@ -133,7 +133,6 @@ class GameOptions {
         // ----------------------------
 
         this.danceMoveLength = {min: 7, max: 12}        // number of seconds for how long a dance move should be shown
-        this.danceProgressUpdateInterval = 5;                // interval in seconds for the progress to be updated
         this.dancePointsFunctions = [                     // the functions which are used to calculate from the percentage of how long your moves were correct to the points
             {slope: 3.33, offset: 100},                     // the function which is used to calculate from the percentage of how long your moves were correct to the points in the first segment
             {slope: 17.5, offset: -750}                        // the function which is used to calculate from the percentage of how long your moves were correct to the points in the second segment

@@ -16,7 +16,7 @@ export default class TestScene3 extends Scene
 
         gameManager.newGame();
 
-        gameManager.setScenes('Accountant', 'Dance');
+        gameManager.setScenes('Accountant', 'Lawn');
 
         this.scene.start('Game');
 
